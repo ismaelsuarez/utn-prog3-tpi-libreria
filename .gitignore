@@ -1,0 +1,12 @@
+# Estado y registros locales de las herramientas de desarrollo
+.atl/
+.active-orchestrator-state.json
+.codegraph/
+.engram/
+
+# Archivos del sistema y del editor
+.DS_Store
+Thumbs.db
+*.swp
+.vscode/
+.idea/
