@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Libros · Librería El Faro</title>
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/disposicion.css">
+  <link rel="stylesheet" href="css/componentes.css">
+</head>
+<body>
+  <header class="encabezado">
+    <p class="encabezado__nombre">Librería El Faro</p>
+    <nav class="navegacion" aria-label="Principal">
+      <ul class="navegacion__lista">
+        <li><a class="navegacion__enlace" href="index.html">Catálogo</a></li>
+        <li><a class="navegacion__enlace" href="libros.html" aria-current="page">Libros</a></li>
+        <li><a class="navegacion__enlace" href="clientes.html">Clientes</a></li>
+        <li><a class="navegacion__enlace" href="ventas.html">Ventas</a></li>
+        <li><a class="navegacion__enlace" href="historial.html">Historial</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main class="contenido">
+    <h1>Libros</h1>
+
+    <section class="seccion" aria-labelledby="titulo-alta-libro">
+      <h2 id="titulo-alta-libro">Registrar un libro</h2>
+      <p class="etiqueta-maqueta"><strong>Maqueta:</strong> este formulario todavía no registra libros.</p>
+
+      <p id="mensaje-estado" class="mensaje mensaje--correcto" role="status"></p>
+      <p id="mensaje-error" class="mensaje mensaje--error" role="alert"></p>
+
+      <form id="form-libro" class="formulario" novalidate>
+        <div class="campo">
+          <label class="campo__etiqueta" for="libro-titulo">Título</label>
+          <input class="campo__control" type="text" id="libro-titulo" name="titulo" aria-describedby="error-libro-titulo">
+          <p id="error-libro-titulo" class="campo__error"></p>
+        </div>
+
+        <div class="campo">
+          <label class="campo__etiqueta" for="libro-isbn">ISBN</label>
+          <input class="campo__control" type="text" id="libro-isbn" name="isbn" aria-describedby="error-libro-isbn">
+          <p id="error-libro-isbn" class="campo__error"></p>
+        </div>
+
+        <div class="campo">
+          <label class="campo__etiqueta" for="libro-precio">Precio</label>
+          <input class="campo__control" type="number" id="libro-precio" name="precio" min="0.01" step="0.01" aria-describedby="error-libro-precio">
+          <p id="error-libro-precio" class="campo__error"></p>
+        </div>
+
+        <div class="campo">
+          <label class="campo__etiqueta" for="libro-editorial">Editorial</label>
+          <select class="campo__control" id="libro-editorial" name="editorial" aria-describedby="error-libro-editorial">
+            <option value="">Elegir una editorial</option>
+            <option value="editorial-1">Ediciones del Puerto</option>
+            <option value="editorial-2">Editorial Brújula</option>
+          </select>
+          <p id="error-libro-editorial" class="campo__error"></p>
+        </div>
+
+        <div class="campo">
+          <label class="campo__etiqueta" for="libro-genero">Género</label>
+          <select class="campo__control" id="libro-genero" name="genero" aria-describedby="error-libro-genero">
+            <option value="">Sin clasificar</option>
+            <option value="genero-1">Novela</option>
+            <option value="genero-2">Ensayo</option>
+          </select>
+          <p id="error-libro-genero" class="campo__error"></p>
+        </div>
+
+        <fieldset id="libro-autores" class="grupo-opciones" aria-describedby="error-libro-autores">
+          <legend>Autores</legend>
+          <label class="grupo-opciones__opcion"><input type="checkbox" name="autores" value="autor-1"> <span data-campo="nombre">Marta Ibáñez</span></label>
+          <label class="grupo-opciones__opcion"><input type="checkbox" name="autores" value="autor-2"> <span data-campo="nombre">Tomás Quiroga</span></label>
+          <label class="grupo-opciones__opcion"><input type="checkbox" name="autores" value="autor-3"> <span data-campo="nombre">Elena Varela</span></label>
+        </fieldset>
+        <p id="error-libro-autores" class="campo__error"></p>
+
+        <button class="boton boton--primario" type="submit">Registrar libro</button>
+      </form>
+    </section>
+
+    <section class="seccion" aria-labelledby="titulo-listado-libros">
+      <h2 id="titulo-listado-libros">Libros registrados</h2>
+
+      <p id="libros-vacio" class="mensaje mensaje--vacio" hidden>No hay libros registrados.</p>
+
+      <div class="tabla-contenedor">
+        <table id="tabla-libros" class="tabla">
+          <caption>Libros registrados en la librería</caption>
+          <thead>
+            <tr>
+              <th scope="col">Título</th>
+              <th scope="col">ISBN</th>
+              <th scope="col">Editorial</th>
+              <th scope="col">Género</th>
+              <th scope="col">Autores</th>
+              <th scope="col">Precio</th>
+            </tr>
+          </thead>
+          <tbody id="filas-libros">
+            <tr>
+              <td data-campo="titulo">El faro de los vientos</td>
+              <td data-campo="isbn">978-987-000-001-1</td>
+              <td data-campo="editorial">Ediciones del Puerto</td>
+              <td data-campo="genero">Novela</td>
+              <td data-campo="autores">Marta Ibáñez</td>
+              <td data-campo="precio">$ 1500,00</td>
+            </tr>
+            <tr>
+              <td data-campo="titulo">Cartas desde el sur</td>
+              <td data-campo="isbn">978-987-000-002-8</td>
+              <td data-campo="editorial">Editorial Brújula</td>
+              <td data-campo="genero">Novela</td>
+              <td data-campo="autores">Tomás Quiroga</td>
+              <td data-campo="precio">$ 2000,00</td>
+            </tr>
+            <tr>
+              <td data-campo="titulo">Mapas para perderse</td>
+              <td data-campo="isbn">978-987-000-003-5</td>
+              <td data-campo="editorial">Editorial Brújula</td>
+              <td data-campo="genero">Ensayo</td>
+              <td data-campo="autores">Elena Varela, Tomás Quiroga</td>
+              <td data-campo="precio">$ 2350,50</td>
+            </tr>
+            <tr>
+              <td data-campo="titulo">La casa del río</td>
+              <td data-campo="isbn">978-987-000-004-2</td>
+              <td data-campo="editorial">Ediciones del Puerto</td>
+              <td data-campo="genero">Sin clasificar</td>
+              <td data-campo="autores">Marta Ibáñez</td>
+              <td data-campo="precio">$ 1800,00</td>
+            </tr>
+            <tr>
+              <td data-campo="titulo">Breve historia del silencio</td>
+              <td data-campo="isbn">978-987-000-005-9</td>
+              <td data-campo="editorial">Ediciones del Puerto</td>
+              <td data-campo="genero">Ensayo</td>
+              <td data-campo="autores">Elena Varela</td>
+              <td data-campo="precio">$ 2750,00</td>
+            </tr>
+            <tr>
+              <td data-campo="titulo">Los días contados</td>
+              <td data-campo="isbn">978-987-000-006-6</td>
+              <td data-campo="editorial">Editorial Brújula</td>
+              <td data-campo="genero">Novela</td>
+              <td data-campo="autores">Tomás Quiroga</td>
+              <td data-campo="precio">$ 1990,90</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <template id="plantilla-opcion-autor">
+      <label class="grupo-opciones__opcion"><input type="checkbox" name="autores" value=""> <span data-campo="nombre"></span></label>
+    </template>
+
+    <template id="plantilla-fila-libro">
+      <tr>
+        <td data-campo="titulo"></td>
+        <td data-campo="isbn"></td>
+        <td data-campo="editorial"></td>
+        <td data-campo="genero"></td>
+        <td data-campo="autores"></td>
+        <td data-campo="precio"></td>
+      </tr>
+    </template>
+  </main>
+
+  <footer class="pie">
+    <p>Trabajo Práctico Integrador · Programación III · UTN</p>
+    <p>Avalos Pablo, Blangetti Sofia, Suarez Ismael. Los datos son ficticios.</p>
+  </footer>
+</body>
+</html>

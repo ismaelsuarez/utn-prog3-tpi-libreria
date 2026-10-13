@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Ventas · Librería El Faro</title>
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/disposicion.css">
+  <link rel="stylesheet" href="css/componentes.css">
+</head>
+<body>
+  <header class="encabezado">
+    <p class="encabezado__nombre">Librería El Faro</p>
+    <nav class="navegacion" aria-label="Principal">
+      <ul class="navegacion__lista">
+        <li><a class="navegacion__enlace" href="index.html">Catálogo</a></li>
+        <li><a class="navegacion__enlace" href="libros.html">Libros</a></li>
+        <li><a class="navegacion__enlace" href="clientes.html">Clientes</a></li>
+        <li><a class="navegacion__enlace" href="ventas.html" aria-current="page">Ventas</a></li>
+        <li><a class="navegacion__enlace" href="historial.html">Historial</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main class="contenido">
+    <h1>Ventas</h1>
+
+    <p class="etiqueta-maqueta"><strong>Maqueta:</strong> los controles de esta vista todavía no componen ni confirman ventas. Los renglones y el total son un ejemplo.</p>
+
+    <p id="mensaje-estado" class="mensaje mensaje--correcto" role="status"></p>
+    <p id="mensaje-error" class="mensaje mensaje--error" role="alert"></p>
+
+    <form id="form-venta" class="formulario" novalidate>
+      <section class="seccion" aria-labelledby="titulo-venta-cliente">
+        <h2 id="titulo-venta-cliente">Cliente</h2>
+        <div class="campo">
+          <label class="campo__etiqueta" for="venta-cliente">Cliente de la venta</label>
+          <select class="campo__control" id="venta-cliente" name="cliente" aria-describedby="error-venta-cliente">
+            <option value="">Elegir un cliente</option>
+            <option value="cliente-1">Lucía Fernández</option>
+            <option value="cliente-2">Martín Gómez</option>
+            <option value="cliente-3">Carla Ruiz</option>
+          </select>
+          <p id="error-venta-cliente" class="campo__error"></p>
+        </div>
+      </section>
+
+      <section class="seccion" aria-labelledby="titulo-venta-renglones">
+        <h2 id="titulo-venta-renglones">Renglones</h2>
+
+        <div class="campo">
+          <label class="campo__etiqueta" for="venta-libro">Libro</label>
+          <select class="campo__control" id="venta-libro" name="libro" aria-describedby="error-venta-libro">
+            <option value="">Elegir un libro</option>
+            <option value="libro-1">El faro de los vientos</option>
+            <option value="libro-2">Cartas desde el sur</option>
+            <option value="libro-3">Mapas para perderse</option>
+            <option value="libro-4">La casa del río</option>
+            <option value="libro-5">Breve historia del silencio</option>
+            <option value="libro-6">Los días contados</option>
+          </select>
+          <p id="error-venta-libro" class="campo__error"></p>
+        </div>
+
+        <div class="campo">
+          <label class="campo__etiqueta" for="venta-cantidad">Cantidad</label>
+          <input class="campo__control" type="number" id="venta-cantidad" name="cantidad" min="1" step="1" value="1" aria-describedby="error-venta-cantidad">
+          <p id="error-venta-cantidad" class="campo__error"></p>
+        </div>
+
+        <button class="boton boton--secundario" type="button" id="boton-agregar-renglon">Agregar renglón</button>
+
+        <p id="renglones-vacio" class="mensaje mensaje--vacio" hidden>La venta todavía no tiene renglones.</p>
+
+        <div class="tabla-contenedor">
+          <table id="tabla-renglones" class="tabla">
+            <caption>Renglones de la venta</caption>
+            <thead>
+              <tr>
+                <th scope="col">Libro</th>
+                <th scope="col">Cantidad</th>
+                <th scope="col">Precio unitario</th>
+                <th scope="col">Subtotal</th>
+                <th scope="col">Acciones</th>
+              </tr>
+            </thead>
+            <tbody id="filas-renglones">
+              <tr>
+                <th scope="row" data-campo="libro">El faro de los vientos</th>
+                <td>
+                  <label class="campo__etiqueta">Cantidad de <span data-campo="libro">El faro de los vientos</span>
+                    <input class="campo__control" type="number" name="cantidad-renglon" min="1" step="1" value="2" data-campo="cantidad">
+                  </label>
+                </td>
+                <td data-campo="precio-unitario">$ 1500,00</td>
+                <td data-campo="subtotal">$ 3000,00</td>
+                <td><button class="boton boton--secundario" type="button" data-accion="quitar-renglon">Quitar <span data-campo="libro">El faro de los vientos</span></button></td>
+              </tr>
+              <tr>
+                <th scope="row" data-campo="libro">Cartas desde el sur</th>
+                <td>
+                  <label class="campo__etiqueta">Cantidad de <span data-campo="libro">Cartas desde el sur</span>
+                    <input class="campo__control" type="number" name="cantidad-renglon" min="1" step="1" value="1" data-campo="cantidad">
+                  </label>
+                </td>
+                <td data-campo="precio-unitario">$ 2000,00</td>
+                <td data-campo="subtotal">$ 2000,00</td>
+                <td><button class="boton boton--secundario" type="button" data-accion="quitar-renglon">Quitar <span data-campo="libro">Cartas desde el sur</span></button></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="seccion resumen" aria-labelledby="titulo-venta-resumen">
+        <h2 id="titulo-venta-resumen">Resumen de la venta</h2>
+        <p>Total: <output id="venta-total">$ 5000,00</output></p>
+        <button class="boton boton--primario" type="submit" id="boton-confirmar-venta">Confirmar venta</button>
+      </section>
+    </form>
+
+    <template id="plantilla-fila-renglon">
+      <tr>
+        <th scope="row" data-campo="libro"></th>
+        <td>
+          <label class="campo__etiqueta">Cantidad de <span data-campo="libro"></span>
+            <input class="campo__control" type="number" name="cantidad-renglon" min="1" step="1" data-campo="cantidad">
+          </label>
+        </td>
+        <td data-campo="precio-unitario"></td>
+        <td data-campo="subtotal"></td>
+        <td><button class="boton boton--secundario" type="button" data-accion="quitar-renglon">Quitar <span data-campo="libro"></span></button></td>
+      </tr>
+    </template>
+  </main>
+
+  <footer class="pie">
+    <p>Trabajo Práctico Integrador · Programación III · UTN</p>
+    <p>Avalos Pablo, Blangetti Sofia, Suarez Ismael. Los datos son ficticios.</p>
+  </footer>
+</body>
+</html>

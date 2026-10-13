@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Catálogo · Librería El Faro</title>
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/disposicion.css">
+  <link rel="stylesheet" href="css/componentes.css">
+  <script src="js/paginas/catalogo.js" defer></script>
+</head>
+<body>
+  <header class="encabezado">
+    <p class="encabezado__nombre">Librería El Faro</p>
+    <nav class="navegacion" aria-label="Principal">
+      <ul class="navegacion__lista">
+        <li><a class="navegacion__enlace" href="index.html" aria-current="page">Catálogo</a></li>
+        <li><a class="navegacion__enlace" href="libros.html">Libros</a></li>
+        <li><a class="navegacion__enlace" href="clientes.html">Clientes</a></li>
+        <li><a class="navegacion__enlace" href="ventas.html">Ventas</a></li>
+        <li><a class="navegacion__enlace" href="historial.html">Historial</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main class="contenido">
+    <h1>Catálogo</h1>
+
+    <section class="seccion" aria-labelledby="titulo-busqueda">
+      <h2 id="titulo-busqueda">Buscar libros</h2>
+      <form id="form-busqueda" class="formulario" role="search">
+        <div class="campo">
+          <label class="campo__etiqueta" for="busqueda-titulo">Buscar por título</label>
+          <input class="campo__control" type="search" id="busqueda-titulo" name="titulo" autocomplete="off">
+        </div>
+      </form>
+    </section>
+
+    <section class="seccion" aria-labelledby="titulo-listado">
+      <h2 id="titulo-listado">Libros disponibles</h2>
+
+      <p id="catalogo-vacio" class="mensaje mensaje--vacio" hidden>No hay libros registrados en el catálogo.</p>
+      <p id="catalogo-sin-resultados" class="mensaje mensaje--vacio" role="status" hidden>No se encontraron libros cuyo título coincida con la búsqueda.</p>
+
+      <ul id="lista-catalogo" class="lista-tarjetas">
+        <li>
+          <article class="tarjeta">
+            <h3 class="tarjeta__titulo" data-campo="titulo">El faro de los vientos</h3>
+            <dl class="tarjeta__datos">
+              <div class="tarjeta__dato"><dt>ISBN</dt><dd data-campo="isbn">978-987-000-001-1</dd></div>
+              <div class="tarjeta__dato"><dt>Editorial</dt><dd data-campo="editorial">Ediciones del Puerto</dd></div>
+              <div class="tarjeta__dato"><dt>Género</dt><dd data-campo="genero">Novela</dd></div>
+              <div class="tarjeta__dato"><dt>Autores</dt><dd data-campo="autores">Marta Ibáñez</dd></div>
+              <div class="tarjeta__dato"><dt>Precio</dt><dd data-campo="precio">$ 1500,00</dd></div>
+            </dl>
+          </article>
+        </li>
+        <li>
+          <article class="tarjeta">
+            <h3 class="tarjeta__titulo" data-campo="titulo">Cartas desde el sur</h3>
+            <dl class="tarjeta__datos">
+              <div class="tarjeta__dato"><dt>ISBN</dt><dd data-campo="isbn">978-987-000-002-8</dd></div>
+              <div class="tarjeta__dato"><dt>Editorial</dt><dd data-campo="editorial">Editorial Brújula</dd></div>
+              <div class="tarjeta__dato"><dt>Género</dt><dd data-campo="genero">Novela</dd></div>
+              <div class="tarjeta__dato"><dt>Autores</dt><dd data-campo="autores">Tomás Quiroga</dd></div>
+              <div class="tarjeta__dato"><dt>Precio</dt><dd data-campo="precio">$ 2000,00</dd></div>
+            </dl>
+          </article>
+        </li>
+        <li>
+          <article class="tarjeta">
+            <h3 class="tarjeta__titulo" data-campo="titulo">Mapas para perderse</h3>
+            <dl class="tarjeta__datos">
+              <div class="tarjeta__dato"><dt>ISBN</dt><dd data-campo="isbn">978-987-000-003-5</dd></div>
+              <div class="tarjeta__dato"><dt>Editorial</dt><dd data-campo="editorial">Editorial Brújula</dd></div>
+              <div class="tarjeta__dato"><dt>Género</dt><dd data-campo="genero">Ensayo</dd></div>
+              <div class="tarjeta__dato"><dt>Autores</dt><dd data-campo="autores">Elena Varela, Tomás Quiroga</dd></div>
+              <div class="tarjeta__dato"><dt>Precio</dt><dd data-campo="precio">$ 2350,50</dd></div>
+            </dl>
+          </article>
+        </li>
+        <li>
+          <article class="tarjeta">
+            <h3 class="tarjeta__titulo" data-campo="titulo">La casa del río</h3>
+            <dl class="tarjeta__datos">
+              <div class="tarjeta__dato"><dt>ISBN</dt><dd data-campo="isbn">978-987-000-004-2</dd></div>
+              <div class="tarjeta__dato"><dt>Editorial</dt><dd data-campo="editorial">Ediciones del Puerto</dd></div>
+              <div class="tarjeta__dato"><dt>Género</dt><dd data-campo="genero">Sin clasificar</dd></div>
+              <div class="tarjeta__dato"><dt>Autores</dt><dd data-campo="autores">Marta Ibáñez</dd></div>
+              <div class="tarjeta__dato"><dt>Precio</dt><dd data-campo="precio">$ 1800,00</dd></div>
+            </dl>
+          </article>
+        </li>
+        <li>
+          <article class="tarjeta">
+            <h3 class="tarjeta__titulo" data-campo="titulo">Breve historia del silencio</h3>
+            <dl class="tarjeta__datos">
+              <div class="tarjeta__dato"><dt>ISBN</dt><dd data-campo="isbn">978-987-000-005-9</dd></div>
+              <div class="tarjeta__dato"><dt>Editorial</dt><dd data-campo="editorial">Ediciones del Puerto</dd></div>
+              <div class="tarjeta__dato"><dt>Género</dt><dd data-campo="genero">Ensayo</dd></div>
+              <div class="tarjeta__dato"><dt>Autores</dt><dd data-campo="autores">Elena Varela</dd></div>
+              <div class="tarjeta__dato"><dt>Precio</dt><dd data-campo="precio">$ 2750,00</dd></div>
+            </dl>
+          </article>
+        </li>
+        <li>
+          <article class="tarjeta">
+            <h3 class="tarjeta__titulo" data-campo="titulo">Los días contados</h3>
+            <dl class="tarjeta__datos">
+              <div class="tarjeta__dato"><dt>ISBN</dt><dd data-campo="isbn">978-987-000-006-6</dd></div>
+              <div class="tarjeta__dato"><dt>Editorial</dt><dd data-campo="editorial">Editorial Brújula</dd></div>
+              <div class="tarjeta__dato"><dt>Género</dt><dd data-campo="genero">Novela</dd></div>
+              <div class="tarjeta__dato"><dt>Autores</dt><dd data-campo="autores">Tomás Quiroga</dd></div>
+              <div class="tarjeta__dato"><dt>Precio</dt><dd data-campo="precio">$ 1990,90</dd></div>
+            </dl>
+          </article>
+        </li>
+      </ul>
+    </section>
+
+    <template id="plantilla-tarjeta-libro">
+      <li>
+        <article class="tarjeta">
+          <h3 class="tarjeta__titulo" data-campo="titulo"></h3>
+          <dl class="tarjeta__datos">
+            <div class="tarjeta__dato"><dt>ISBN</dt><dd data-campo="isbn"></dd></div>
+            <div class="tarjeta__dato"><dt>Editorial</dt><dd data-campo="editorial"></dd></div>
+            <div class="tarjeta__dato"><dt>Género</dt><dd data-campo="genero"></dd></div>
+            <div class="tarjeta__dato"><dt>Autores</dt><dd data-campo="autores"></dd></div>
+            <div class="tarjeta__dato"><dt>Precio</dt><dd data-campo="precio"></dd></div>
+          </dl>
+        </article>
+      </li>
+    </template>
+  </main>
+
+  <footer class="pie">
+    <p>Trabajo Práctico Integrador · Programación III · UTN</p>
+    <p>Avalos Pablo, Blangetti Sofia, Suarez Ismael. Los datos son ficticios.</p>
+  </footer>
+</body>
+</html>
