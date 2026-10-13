@@ -131,6 +131,29 @@ consigna: incumplirlas se informa en la evaluación.
 13. **Idioma**: código (nombres de archivos, funciones y propiedades), interfaz y documentación en español neutro. Esta regla reemplaza, para este proyecto, el valor por defecto global de artefactos en inglés.
 14. **NUNCA** usar `var` en JavaScript → declarar con `const` por defecto y con `let` solo cuando la variable se reasigna. Cada script clásico mantiene su código dentro de una función envolvente, porque `const` y `let` de nivel superior comparten un mismo ámbito entre los scripts de la página y dos declaraciones con el mismo nombre producen un error.
 
+15. **NUNCA** empezar a trabajar sin traer primero la memoria compartida → al iniciar una sesión, y después de cada `git pull`, `git merge` o cambio de rama, ejecutar `engram sync --import` en la raíz del proyecto. Antes de eso, comprobar que los hooks estén activos con `git config core.hooksPath`; si no devuelve `.githooks`, ejecutar `git config core.hooksPath .githooks`.
+16. **NUNCA** hacer un commit sin la memoria actualizada → antes de cada `git commit`, ejecutar `engram sync` y sumar la carpeta con `git add .engram`, de modo que el commit y el `git push` lleven lo último. El hook `pre-commit` lo hace solo; si los hooks no están activos, hacerlo a mano.
+17. **NUNCA** ejecutar `engram sync --all` ni `engram sync --cloud` en este proyecto → la base de Engram es global y `--all` publicaría la memoria de otros proyectos en un repositorio público. Usar siempre `engram sync` sin opciones, que exporta solo este proyecto.
+18. **NUNCA** guardar en Engram datos personales, credenciales ni rutas de la máquina propia → el repositorio es público y todo lo que se guarda en la memoria del proyecto queda visible para cualquiera, incluidos los mensajes escritos al agente.
+
+---
+
+## Memoria Compartida (Engram)
+
+La memoria del proyecto viaja dentro del repositorio, en `.engram/`, para que
+los tres integrantes y sus agentes compartan decisiones y hallazgos.
+
+| Momento | Qué ocurre | Quién lo hace |
+|---|---|---|
+| Después de `git pull`, `git merge`, `git rebase` o cambio de rama | `engram sync --import` | Hooks `post-merge`, `post-rewrite` y `post-checkout` |
+| Antes de cada `git commit` | `engram sync` y `git add .engram` | Hook `pre-commit` |
+| Al iniciar una sesión de trabajo | `engram sync --import` | El agente (regla dura 15) |
+
+- **Activación, una sola vez por clon**: `git config core.hooksPath .githooks`. Git no activa hooks al clonar; hasta ejecutar ese comando nada es automático.
+- El proyecto se llama `parcial_javascript` para Engram; lo fija `.engram/config.json` y no debe cambiarse.
+- Si Engram no está instalado, los hooks no hacen nada y no interrumpen el commit.
+- `.engram/manifest.json` puede entrar en conflicto si dos personas hacen commit a la vez: se resuelve conservando las entradas de ambos lados.
+
 ---
 
 ## Flujo de Trabajo
@@ -146,8 +169,7 @@ consigna: incumplirlas se informa en la evaluación.
 
 - La lógica pura se escribe con pruebas primero (`node --test`); el DOM y
   `localStorage` se verifican con los casos manuales.
-- El repositorio git se crea cuando exista al menos la estructura del
-  proyecto y el `README.md` (DD-07).
+- Repositorio: <https://github.com/ismaelsuarez/utn-prog3-tpi-libreria> (público, rama `main`).
 - No forman parte de la entrega: `tests/`, `docs/`, `discovery/`,
   `knowledge-base/`, `openspec/`, `.atl/`, `.claude/`, `CHANGES.md`,
   `AGENTS.md`, `CLAUDE.md` y `.active-orchestrator-state.json`.

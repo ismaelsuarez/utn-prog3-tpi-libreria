@@ -1,0 +1,11 @@
+#!/bin/sh
+# Exporta la memoria de Engram de este proyecto y la suma al commit,
+# para que viaje junto con el código. Si Engram no está instalado o
+# la exportación falla, el commit continúa sin cambios.
+command -v engram >/dev/null 2>&1 || exit 0
+raiz=$(git rev-parse --show-toplevel) || exit 0
+cd "$raiz" || exit 0
+[ -f .engram/config.json ] || exit 0
+engram sync >/dev/null 2>&1 || exit 0
+git add .engram >/dev/null 2>&1
+exit 0

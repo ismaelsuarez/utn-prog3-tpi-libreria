@@ -2,7 +2,6 @@
 .atl/
 .active-orchestrator-state.json
 .codegraph/
-.engram/
 
 # Archivos del sistema y del editor
 .DS_Store

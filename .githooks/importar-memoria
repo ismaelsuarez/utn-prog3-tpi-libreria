@@ -1,0 +1,9 @@
+#!/bin/sh
+# Importa a la base local de Engram la memoria versionada en .engram/.
+# Lo invocan los hooks que se ejecutan después de traer cambios.
+command -v engram >/dev/null 2>&1 || exit 0
+raiz=$(git rev-parse --show-toplevel) || exit 0
+cd "$raiz" || exit 0
+[ -f .engram/manifest.json ] || exit 0
+engram sync --import >/dev/null 2>&1
+exit 0

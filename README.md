@@ -68,6 +68,20 @@ funciona.
 - Venta simulada e historial (Ejercicio 5).
 - Persistencia en `localStorage`, casos manuales y documentación final (Ejercicio 6).
 
+## Para quienes desarrollan
+
+Después de clonar el repositorio, ejecutar una sola vez:
+
+```bash
+git config core.hooksPath .githooks
+engram sync --import
+```
+
+El primer comando activa los hooks que mantienen sincronizada la memoria
+compartida del proyecto (carpeta `.engram/`); el segundo la carga en la base
+local de Engram. Requiere tener Engram instalado; sin Engram, el proyecto se
+usa y se edita igual. Detalle en `AGENTS.md`.
+
 ## Estructura de carpetas
 
 ```
