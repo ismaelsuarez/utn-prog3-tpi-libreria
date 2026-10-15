@@ -139,6 +139,9 @@ output {
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  /* C-03 (verificación 7.3): en un flex el espacio antes de un <span> se descarta;
+     gap repone el espacio visible («Quitar <span>libro</span>») */
+  gap: var(--espacio-1);
   min-height: var(--alto-tactil);
   padding: var(--espacio-2) var(--espacio-4);
   border: 1px solid transparent;

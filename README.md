@@ -34,14 +34,20 @@ vistas e indica cuál es la vista actual.
 | Ventas | `ventas.html` | Selección de cliente, renglones y resumen |
 | Historial | `historial.html` | Tabla de ventas y detalle de una venta |
 
-## Estado del avance (Etapa 1)
+## Estado del avance (Etapa 1 + Ejercicio 3)
 
-Este avance corresponde a la estructura y las pantallas HTML (Ejercicio 1).
-Los datos que se ven son ejemplos estáticos escritos en el HTML.
+Este avance corresponde a la estructura y las pantallas HTML (Ejercicio 1), la
+presentación con CSS (Ejercicio 2) y los datos locales con el catálogo
+generado por JavaScript (Ejercicio 3). Las tarjetas del Catálogo se generan
+desde `js/datos/datos-iniciales.js`; los demás listados siguen siendo
+ejemplos estáticos escritos en el HTML.
 
 ### Interacciones que ya funcionan
 
 - Navegación entre las cinco vistas.
+- **Catálogo generado desde los datos**: al abrir `index.html` las tarjetas se
+  arma desde el almacén de datos (editorial, género y autores se resuelven por
+  identificador y un libro sin género muestra «Sin clasificar»).
 - **Filtro por título del Catálogo**: no distingue mayúsculas de minúsculas,
   admite coincidencias parciales e ignora los espacios de los extremos. Una
   búsqueda vacía muestra todos los libros y una búsqueda sin coincidencias
@@ -54,7 +60,6 @@ funciona.
 
 | Vista | Qué es maqueta |
 |---|---|
-| Catálogo | Las tarjetas son ejemplos fijos; todavía no se generan desde datos |
 | Libros | El formulario no registra libros; la tabla es un ejemplo fijo |
 | Clientes | El formulario no registra clientes; la tabla es un ejemplo fijo |
 | Ventas | Los controles no componen ni confirman ventas; los renglones y el total son un ejemplo fijo |
@@ -62,8 +67,9 @@ funciona.
 
 ### Pendiente
 
-- Presentación con CSS y uso adaptable (Ejercicio 2): las páginas todavía no tienen estilos.
-- Datos locales y catálogo generado con JavaScript (Ejercicio 3).
+- Presentación con CSS y uso adaptable (Ejercicio 2): hecho (C-02 archivado).
+- Datos locales y catálogo generado con JavaScript (Ejercicio 3): hecho (C-03).
+- Alta de libros y clientes con validaciones (Ejercicio 4).
 - Alta de libros y clientes con validaciones (Ejercicio 4).
 - Venta simulada e historial (Ejercicio 5).
 - Persistencia en `localStorage`, casos manuales y documentación final (Ejercicio 6).

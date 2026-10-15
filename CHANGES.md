@@ -187,7 +187,7 @@ Notas: el paso 3 es el cuello de botella real (C-04 y C-05 usan el almacén de C
 > A partir de acá las pantallas dejan de ser maqueta y se conectan con datos. El almacén (`js/almacen.js`) nace en C-03 y todos los changes siguientes lo consumen: su interfaz no debe cambiar de firma después de C-03.
 
 ### [C-03] `datos-locales-catalogo-y-filtro`
-- **Estado**: `[ ]` pendiente
+- **Estado**: `[x]` archivado el 2026-10-15 (`openspec/changes/archive/2026-10-15-datos-locales-catalogo-y-filtro/`)
 - **Scope**:
   - Trazabilidad: **Ejercicio 3, 15 puntos** (modelo y ejemplos 5; renderizado 5; filtro y estados 5). US-006, US-007 y US-008. Reglas: RN-CA-01 a RN-CA-08, RN-UI-05.
   - `js/datos/datos-iniciales.js`: al menos 6 libros, 2 editoriales, 2 géneros, 3 autores y 3 clientes ficticios; incluir un libro sin género («Sin clasificar»), un libro con más de un autor y libros con precios 1500 y 2000 (necesarios para CM-5). Exportación dual (espacio de nombres `Libreria` y `module.exports` si existe).
