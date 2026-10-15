@@ -105,6 +105,14 @@
 **Trade-offs aceptados**: toda la validación debe escribirse en JavaScript.
 **Origen**: change `estructura-y-pantallas-html`, decisiones D6 y D7.
 
+### DD-15 — Identidad visual: paleta «verde biblioteca + crema» y tipografía del sistema
+**Decisión**: la identidad visual usa la paleta verde bosque `#2f5d3a` / dorado `#8f6210` / crema `#faf7ef` / error `#93201a`, en modo claro solamente; la tipografía es la pila del sistema (con la monoespaciada del sistema para ISBN e importes, mediante selectores sobre `data-campo`); todo se declara como variables CSS en `css/base.css` y las hojas de disposición y componentes solo consumen esas variables.
+**Contexto**: PA-03 pedía paleta y tipografía locales; la consigna prohíbe librerías, CDNs y recursos externos, y el proyecto se abre desde `file://`.
+**Alternativas consideradas**: acento dorado más claro (`#c9971f`); `@font-face` con WOFF2 descargado; valores sueltos por componente en lugar de variables.
+**Justificación**: el verde profundo y el crema evocan «biblioteca» y todos los pares texto/fondo alcanzan ≥ 4,5:1 de contraste (verificados con la fórmula WCAG); la pila del sistema es local por definición, sin binarios en la entrega; con variables, un ajuste de paleta es un solo cambio y las tres hojas quedan coherentes por construcción.
+**Trade-offs aceptados**: no hay modo oscuro; los navegadores muy viejos muestran una tipografía del sistema distinta aunque siempre legible.
+**Origen**: change `presentacion-css-y-uso-adaptable`, decisiones D1, D2 y D3.
+
 ## Supuestos inferidos
 
 ### SU-01 — Cada consigna equivale a un change autocontenido

@@ -21,7 +21,7 @@
 |---|---|---|---|---|
 | PA-01 | Resuelta | ¿Se adelanta la escritura en `localStorage` a los ejercicios 4 y 5? **Sí** (DD-09) | — | Equipo |
 | PA-02 | Alta | Fechas y canal de entrega. El docente los comunica por separado | Planificación | Docente |
-| PA-03 | Media | Paleta de colores y tipografía local de la identidad visual | Change 2 | Equipo |
+| PA-03 | Resuelta | Paleta de colores y tipografía local de la identidad visual. **Verde biblioteca + crema y tipografía del sistema** (DD-15, change `presentacion-css-y-uso-adaptable`) | — | Equipo |
 | PA-04 | Media | ¿Cómo se distingue «primer inicio» de un almacenamiento parcialmente vacío (una clave presente y otra ausente)? | Change 6 | Equipo |
 | PA-05 | Media | ¿Qué hace la aplicación si el contenido de `localStorage` es ilegible o fue alterado a mano? El docente lo edita en CM-6 | Change 6 | Equipo |
 | PA-06 | Media | Ante un libro repetido en la venta, ¿se suma la cantidad al renglón existente o se informa el duplicado? La consigna admite ambas | Change 5 | Equipo |

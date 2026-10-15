@@ -157,7 +157,7 @@ Notas: el paso 3 es el cuello de botella real (C-04 y C-05 usan el almacén de C
 ---
 
 ### [C-02] `presentacion-css-y-uso-adaptable`
-- **Estado**: `[ ]` pendiente
+- **Estado**: `[x]` archivado el 2026-10-14 (`openspec/changes/archive/2026-10-14-presentacion-css-y-uso-adaptable/`)
 - **Scope**:
   - Trazabilidad: **Ejercicio 2, 20 puntos** (coherencia y organización 8; adaptación 8; accesibilidad básica 4). US-003, US-004 y US-005. Reglas: RN-GL-01 a RN-GL-04, RN-UI-11 a RN-UI-15. **Pertenece a la Etapa 1; su cierre completa el hito.**
   - `css/base.css`: variables en `:root` (paleta, tipografía, espaciado, radios), reinicio mínimo, estilo de `:focus-visible` en todos los controles. Cerrar PA-03 (paleta y tipografía) en el explore.

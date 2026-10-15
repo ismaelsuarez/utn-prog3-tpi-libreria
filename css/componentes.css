@@ -1,1 +1,336 @@
-/* Tarjetas, formularios, botones, tablas y mensajes. Contenido a cargo del change presentacion-css-y-uso-adaptable. */
+/* Componentes: tarjetas, formularios, botones, tablas, mensajes y marca de maqueta.
+   Change presentacion-css-y-uso-adaptable (design D3, D8, D9, D11, D12).
+   Solo se usan variables de base.css; ningún valor de color suelto en esta hoja (D1). */
+
+/* D3 y tarea 3.7 — monoespaciada del sistema para ISBN e importes (vocabulario data-campo de C-01 D9) */
+[data-campo="isbn"],
+[data-campo="precio"],
+[data-campo="precio-unitario"],
+[data-campo="subtotal"],
+[data-campo="total"],
+output {
+  font-family: var(--fuente-mono);
+}
+
+/* D11 — tarjetas: borde siempre, sombra decorativa; degradan sin sombra */
+.tarjeta {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-2);
+  height: 100%;
+  padding: var(--espacio-4);
+  background-color: var(--color-superficie);
+  border: 1px solid var(--color-borde);
+  border-radius: var(--radio);
+  box-shadow: var(--sombra);
+}
+
+.tarjeta__titulo {
+  font-size: var(--tamano-destacado);
+  line-height: var(--interlineado-titulos);
+  color: var(--color-primario);
+}
+
+.tarjeta__datos {
+  display: grid;
+  gap: var(--espacio-1);
+  font-size: var(--tamano-texto-pequeno);
+}
+
+/* Lista etiqueta/valor */
+.tarjeta__dato {
+  display: grid;
+  grid-template-columns: 5.5rem minmax(0, 1fr);
+  gap: var(--espacio-2);
+}
+
+.tarjeta__dato dt {
+  color: var(--color-texto-suave);
+}
+
+.tarjeta__dato dd {
+  margin: 0;
+}
+
+/* D9 — formularios apilados a 320 px; dos columnas desde 48em (ver disposicion.css) */
+.formulario {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-3);
+  margin: 0;
+}
+
+.campo {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-1);
+  min-width: 0;
+}
+
+.campo__etiqueta {
+  font-weight: 600;
+}
+
+/* D9 — objetivo táctil de 2,75 rem (44 px) y ancho acotado para no estirarse a 1280 px */
+.campo__control {
+  min-height: var(--alto-tactil);
+  width: 100%;
+  max-width: min(100%, var(--ancho-control-maximo));
+  padding: var(--espacio-2) var(--espacio-3);
+  background-color: var(--color-superficie);
+  color: var(--color-texto);
+  border: 1px solid var(--color-borde);
+  border-radius: var(--radio-sm);
+  font: inherit;
+  accent-color: var(--color-primario);
+}
+
+.campo__control::placeholder {
+  color: var(--color-texto-suave);
+}
+
+/* D8 — error de campo: trazo lateral y símbolo; el vacío no ocupa lugar */
+.campo__error {
+  margin: 0;
+}
+
+.campo__error:empty {
+  display: none;
+}
+
+.campo__error:not(:empty) {
+  padding-inline-start: var(--espacio-2);
+  border-inline-start: var(--grosor-trazo) solid var(--color-error);
+  color: var(--color-error);
+  font-size: var(--tamano-texto-pequeno);
+}
+
+.campo__error:not(:empty)::before {
+  content: "⚠ ";
+}
+
+/* Casillas envueltas con gap (autores de libros) */
+.grupo-opciones {
+  min-width: 0;
+  margin: 0;
+  padding: var(--espacio-3);
+  border: 1px solid var(--color-borde);
+  border-radius: var(--radio-sm);
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--espacio-2) var(--espacio-4);
+}
+
+.grupo-opciones legend {
+  padding-inline: var(--espacio-1);
+  font-weight: 600;
+}
+
+.grupo-opciones__opcion {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--espacio-2);
+  min-height: var(--alto-tactil);
+  cursor: pointer;
+}
+
+/* D9 — botones con objetivo táctil de 44 px */
+.boton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: var(--alto-tactil);
+  padding: var(--espacio-2) var(--espacio-4);
+  border: 1px solid transparent;
+  border-radius: var(--radio-sm);
+  font: inherit;
+  font-weight: 600;
+  text-align: center;
+  cursor: pointer;
+  transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+}
+
+.boton--primario {
+  background-color: var(--color-primario);
+  border-color: var(--color-primario);
+  color: var(--color-texto-inverso);
+}
+
+.boton--primario:hover,
+.boton--primario:active {
+  background-color: var(--color-primario-oscuro);
+  border-color: var(--color-primario-oscuro);
+}
+
+.boton--secundario {
+  background-color: var(--color-superficie);
+  border-color: var(--color-primario);
+  color: var(--color-primario);
+}
+
+.boton--secundario:hover,
+.boton--secundario:active {
+  background-color: var(--color-primario-claro);
+}
+
+/* D10 — el contenedor es el único desplazador de la tabla */
+.tabla-contenedor {
+  max-width: 100%;
+  overflow-x: auto;
+  border: 1px solid var(--color-borde);
+  border-radius: var(--radio-sm);
+}
+
+/* D11 — tabla: colapso de bordes, cabecera tintada y filas alternas */
+.tabla {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: var(--color-superficie);
+}
+
+.tabla caption {
+  padding: var(--espacio-2) var(--espacio-3);
+  color: var(--color-texto-suave);
+  font-size: var(--tamano-texto-pequeno);
+  text-align: start;
+}
+
+.tabla th,
+.tabla td {
+  padding: var(--espacio-2) var(--espacio-3);
+  border-bottom: 1px solid var(--color-borde);
+  text-align: start;
+  vertical-align: top;
+}
+
+.tabla thead th {
+  background-color: var(--color-primario-claro);
+  color: var(--color-primario-oscuro);
+}
+
+.tabla tbody tr:nth-child(even) {
+  background-color: var(--color-fondo-alterno);
+}
+
+.tabla tbody th {
+  font-weight: 600;
+}
+
+/* D8 — mensajes: trazo lateral + símbolo + fondo tintado; el texto es el diferenciador principal */
+.mensaje {
+  margin-block: var(--espacio-3);
+  padding: var(--espacio-2) var(--espacio-3);
+  border-inline-start: var(--grosor-trazo) solid var(--color-borde);
+  border-radius: var(--radio-sm);
+}
+
+.mensaje:empty {
+  display: none;
+}
+
+.mensaje--correcto {
+  background-color: var(--color-primario-claro);
+  border-inline-start-color: var(--color-primario);
+  color: var(--color-primario-oscuro);
+}
+
+.mensaje--correcto::before {
+  content: "✓ ";
+}
+
+.mensaje--error {
+  background-color: var(--color-error-fondo);
+  border-inline-start-color: var(--color-error);
+  color: var(--color-error);
+}
+
+.mensaje--error::before {
+  content: "⚠ ";
+}
+
+.mensaje--vacio {
+  background-color: var(--color-superficie);
+  border-inline-start-color: var(--color-acento);
+  color: var(--color-texto-suave);
+}
+
+.mensaje--vacio::before {
+  content: "● ";
+}
+
+/* D8 y D11 — marca de maqueta: pastilla con borde punteado dorado y símbolo */
+.etiqueta-maqueta {
+  display: inline-block;
+  margin-block: var(--espacio-2);
+  padding: var(--espacio-2) var(--espacio-3);
+  background-color: var(--color-superficie);
+  border: 1px dashed var(--color-acento);
+  border-inline-start: var(--grosor-trazo) solid var(--color-acento);
+  border-radius: var(--radio-sm);
+  color: var(--color-texto-suave);
+  font-size: var(--tamano-texto-pequeno);
+}
+
+.etiqueta-maqueta::before {
+  content: "▣ ";
+  color: var(--color-acento);
+}
+
+/* D11 — resumen de venta: panel destacado con acento dorado */
+.resumen {
+  padding: var(--espacio-4);
+  background-color: var(--color-superficie);
+  border: 1px solid var(--color-borde);
+  border-block-start: var(--grosor-trazo) solid var(--color-acento);
+  border-radius: var(--radio);
+  box-shadow: var(--sombra);
+}
+
+.resumen output {
+  font-size: var(--tamano-destacado);
+  font-weight: 600;
+}
+
+/* Dentro de las tablas, los campos compactos no necesitan el ancho máximo del formulario */
+.tabla .campo__control {
+  max-width: 6rem;
+}
+
+/* D4 y D9 — desde el único corte (48em) los campos pasan a dos columnas;
+   las secciones del formulario ocupan el ancho completo */
+@media (min-width: 48em) {
+
+  .formulario {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-items: start;
+    column-gap: var(--espacio-4);
+    row-gap: var(--espacio-3);
+  }
+
+  .formulario > .seccion {
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-items: start;
+    column-gap: var(--espacio-4);
+    row-gap: var(--espacio-3);
+    margin-block: 0;
+  }
+
+  .formulario > .seccion > h2,
+  .formulario > .seccion > .tabla-contenedor,
+  .formulario > .seccion > .mensaje,
+  .formulario > .seccion > .grupo-opciones,
+  .formulario > .seccion > .campo__error,
+  .formulario > .grupo-opciones,
+  .formulario > .campo__error {
+    grid-column: 1 / -1;
+  }
+
+  /* El botón no estira su columna: arranca a la izquierda de su celda */
+  .formulario > .boton,
+  .formulario > .seccion > .boton {
+    justify-self: start;
+  }
+}
