@@ -24,6 +24,14 @@
       "sessions": 1,
       "memories": 5,
       "prompts": 0
+    },
+    {
+      "id": "aeb37ae6",
+      "created_by": "sofav",
+      "created_at": "2026-10-16T14:34:49.3222358Z",
+      "sessions": 1,
+      "memories": 5,
+      "prompts": 0
     }
   ]
 }

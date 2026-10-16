@@ -212,7 +212,10 @@ Notas: el paso 3 es el cuello de botella real (C-04 y C-05 usan el almacén de C
 ---
 
 ### [C-04] `alta-de-libros-y-clientes`
-- **Estado**: `[ ]` pendiente
+- **Estado**: `[x]` archivado el 2026-10-16 (`openspec/changes/archive/2026-10-16-alta-de-libros-y-clientes/`)
+- **Pendientes traslados a C-05 / C-06**:
+  - Tarea 6.3 sin ejecutar: verificación manual de las vistas Libros y Clientes a 320 px y a 1280 px y con teclado/foco visible. C-06 debe ejecutarla y registrar el resultado (regla dura 11).
+  - CM-2 y CM-3 solo se cubrieron a nivel de lógica pura (tests de `node --test`); las mitades que dependen de la venta y del historial quedan para C-05.
 - **Scope**:
   - Trazabilidad: **Ejercicio 4, 15 puntos** (libros y selectores 6; clientes 4; validación y actualización 5). US-009 y US-010. Reglas: RN-LI-01 a RN-LI-11, RN-CL-01 a RN-CL-04, RN-UI-01 a RN-UI-04.
   - `js/logica/libros.js`: `validarLibro(datos, libros, catalogos)` que devuelve la lista de errores: título vacío, ISBN vacío, ISBN existente (comparado sin espacios ni guiones, sin validar dígito de control), precio no numérico o no mayor que cero, editorial inexistente, ningún autor, autor o género inexistente. Género opcional.
