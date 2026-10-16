@@ -1,32 +1,63 @@
-/* Disposición: encabezado, navegación, grillas y cortes.
-   Change presentacion-css-y-uso-adaptable (design D4, D5, D10).
-   Mobile-first: la base es el diseño a 320 px; un solo corte en 48em (768 px).
-   Sin la propiedad order en ningún elemento enfocable (D5, RN-UI-12). */
+/* ==========================================================
+   LIBRERÍA EL FARO — DISPOSICIÓN
+   Encabezado, navegación, contenido, grilla y adaptación.
+   ========================================================== */
 
-/* D5 — encabezado: flexbox en columna a 320 px, en fila desde 48em */
+/* El fondo del header ocupa TODO el viewport; no limitar su ancho. */
 .encabezado {
   display: flex;
   flex-direction: column;
   gap: var(--espacio-2);
   width: 100%;
-  max-width: var(--ancho-maximo);
-  margin-inline: auto;
   padding: var(--espacio-3);
   background-color: var(--color-primario);
   color: var(--color-texto-inverso);
 }
 
-.encabezado__nombre {
-  margin: 0;
-  font-size: var(--tamano-titulo);
-  font-weight: 700;
+/* Solo el contenido interior tiene ancho máximo. */
+.encabezado__interior {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-3);
+  align-items: flex-start;
+  width: 100%;
+  max-width: var(--ancho-maximo);
+  margin-inline: auto;
 }
 
-/* D5 — navegación: flex-wrap con gap; los cinco enlaces se reparten en una o dos líneas */
+.encabezado__marca {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.encabezado__simbolo {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: var(--radio-sm);
+  background: var(--color-primario-intermedio);
+  color: var(--color-acento-claro);
+  font-size: 1.4rem;
+}
+
+.encabezado__nombre {
+  font-family: var(--fuente-titulos);
+  font-size: 1.4rem;
+  font-weight: 700;
+  line-height: 1.15;
+}
+
+.navegacion {
+  width: 100%;
+}
+
 .navegacion__lista {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--espacio-1) var(--espacio-2);
+  gap: var(--espacio-1);
   margin: 0;
   padding: 0;
   list-style: none;
@@ -35,58 +66,103 @@
 .navegacion__enlace {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   min-height: var(--alto-tactil);
-  padding: var(--espacio-1) var(--espacio-3);
+  padding: 0.55rem 0.85rem;
+  border: 1px solid transparent;
   border-radius: var(--radio-sm);
   color: var(--color-texto-inverso);
+  font-size: 0.875rem;
+  font-weight: 500;
   text-decoration: none;
-  transition: background-color 0.15s ease;
+  transition: background-color 0.15s ease, border-color 0.15s ease;
 }
 
 .navegacion__enlace:hover {
-  background-color: var(--color-primario-oscuro);
+  background-color: var(--color-primario-intermedio);
 }
 
-/* La página actual se distingue también sin color: subrayado grueso y negrita (tarea 2.2) */
 .navegacion__enlace[aria-current="page"] {
+  background-color: var(--color-primario-intermedio);
+  border-color: var(--color-borde-resaltado);
   font-weight: 700;
-  text-decoration: underline;
-  text-decoration-thickness: 0.1875rem;
-  text-underline-offset: 0.25rem;
 }
 
-/* D4 — contenido fluido con ancho máximo centrado; padding lateral para 320 px */
+/* Contenido centrado, mientras el header y el footer tienen fondo completo. */
 .contenido {
   flex: 1;
   min-width: 0;
   width: 100%;
   max-width: var(--ancho-maximo);
   margin-inline: auto;
-  padding: var(--espacio-4) var(--espacio-3) var(--espacio-6);
+  padding: var(--espacio-5) var(--espacio-3) var(--espacio-6);
+}
+
+.contenido__introduccion {
+  margin-bottom: var(--espacio-4);
+}
+
+.contenido__ruta {
+  margin-bottom: var(--espacio-2);
+  color: var(--color-primario-intermedio);
+  font-size: var(--tamano-texto-pequeno);
+}
+
+.contenido__introduccion h1,
+.contenido > h1 {
+  margin-bottom: var(--espacio-2);
+  color: var(--color-primario);
+  font-family: var(--fuente-titulos);
+  font-size: var(--tamano-titulo-principal);
+  line-height: var(--interlineado-titulos);
+}
+
+.contenido__descripcion {
+  max-width: 40rem;
+  color: var(--color-texto-suave);
+  font-size: var(--tamano-texto-pequeno);
 }
 
 .seccion {
   margin-block: var(--espacio-5);
 }
 
-.contenido > h1 {
-  margin-block-end: var(--espacio-4);
-  font-size: var(--tamano-titulo-principal);
-  line-height: var(--interlineado-titulos);
-  color: var(--color-primario);
-}
-
 .seccion > h2 {
-  margin-block-end: var(--espacio-3);
+  margin-bottom: var(--espacio-3);
+  color: var(--color-primario);
+  font-family: var(--fuente-titulos);
   font-size: var(--tamano-titulo);
   line-height: var(--interlineado-titulos);
-  color: var(--color-primario);
 }
 
-/* D4 y tarea 2.4 — grilla fluida: una columna a 320 px, varias desde ~20rem */
+/* Caja de búsqueda del catálogo, sin afectar formularios de otras páginas. */
+.seccion--busqueda {
+  padding: var(--espacio-4);
+  background: var(--color-superficie);
+  border: 1px solid var(--color-borde);
+  border-radius: var(--radio);
+  box-shadow: var(--sombra);
+}
+
+.seccion--busqueda > h2 {
+  font-family: var(--fuente-sans);
+  font-size: 0.875rem;
+  font-weight: 700;
+}
+
+.seccion--catalogo {
+  margin-top: var(--espacio-5);
+}
+
+.seccion--catalogo > h2 {
+  margin-bottom: var(--espacio-4);
+  font-size: 1.5rem;
+}
+
+/* Tarjetas horizontales, dos por fila cuando el espacio lo permite. */
 .lista-tarjetas {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(min(100%, 16rem), 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 27rem), 1fr));
   gap: var(--espacio-3);
   margin: 0;
   padding: 0;
@@ -97,28 +173,38 @@
   min-width: 0;
 }
 
-/* Tarea 2.5 — pie coherente en las cinco páginas */
 .pie {
   width: 100%;
-  max-width: var(--ancho-maximo);
-  margin-inline: auto;
   padding: var(--espacio-4) var(--espacio-3);
   border-top: 1px solid var(--color-borde);
+  background-color: var(--color-fondo-alterno);
   color: var(--color-texto-suave);
   font-size: var(--tamano-texto-pequeno);
   text-align: center;
 }
 
 .pie p + p {
-  margin-block-start: var(--espacio-1);
+  margin-top: var(--espacio-1);
 }
 
-/* D4 — único corte: lo que necesita más ancho pasa a fila (los formularios, en componentes.css) */
 @media (min-width: 48em) {
-
   .encabezado {
-    flex-direction: row;
+    flex-direction: row; /* También admite el HTML original, sin interior. */
     align-items: center;
     justify-content: space-between;
+  }
+
+  .encabezado__interior {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .navegacion {
+    width: auto;
+  }
+
+  .contenido {
+    padding-top: var(--espacio-6);
   }
 }

@@ -1,8 +1,9 @@
-/* Componentes: tarjetas, formularios, botones, tablas, mensajes y marca de maqueta.
-   Change presentacion-css-y-uso-adaptable (design D3, D8, D9, D11, D12).
-   Solo se usan variables de base.css; ningún valor de color suelto en esta hoja (D1). */
+/* ==========================================================
+   LIBRERÍA EL FARO — COMPONENTES
+   Tarjetas, imágenes, géneros, formularios, botones, tablas.
+   ========================================================== */
 
-/* D3 y tarea 3.7 — monoespaciada del sistema para ISBN e importes (vocabulario data-campo de C-01 D9) */
+/* ISBN e importes alineados y legibles. */
 [data-campo="isbn"],
 [data-campo="precio"],
 [data-campo="precio-unitario"],
@@ -10,38 +11,180 @@
 [data-campo="total"],
 output {
   font-family: var(--fuente-mono);
+  font-variant-numeric: tabular-nums;
 }
 
-/* D11 — tarjetas: borde siempre, sombra decorativa; degradan sin sombra */
+/* ========== TARJETAS DEL CATÁLOGO ========== */
 .tarjeta {
-  display: flex;
-  flex-direction: column;
-  gap: var(--espacio-2);
+  display: grid;
+  grid-template-columns: 7.75rem minmax(0, 1fr);
+  gap: var(--espacio-3);
   height: 100%;
-  padding: var(--espacio-4);
-  background-color: var(--color-superficie);
+  padding: var(--espacio-3);
+  background: var(--color-superficie);
   border: 1px solid var(--color-borde);
   border-radius: var(--radio);
   box-shadow: var(--sombra);
+  transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+}
+
+.tarjeta:hover {
+  transform: translateY(-2px);
+  border-color: var(--color-borde-resaltado);
+  box-shadow: var(--sombra-hover);
+}
+
+.tarjeta__portada {
+  position: relative;
+  align-self: start;
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  overflow: hidden;
+  border-radius: 0.25rem var(--radio-sm) var(--radio-sm) 0.25rem;
+  border-left: 0.35rem solid var(--color-primario-oscuro);
+  background: var(--portada-default);
+  box-shadow: var(--sombra);
+}
+
+.tarjeta__portada--novela {
+  background: var(--portada-novela);
+}
+
+.tarjeta__portada--ensayo {
+  background: var(--portada-ensayo);
+}
+
+.tarjeta__portada--sin-clasificar {
+  background: var(--portada-sin-clasificar);
+}
+
+/* La ilustración de respaldo se ve cuando falta o falla la imagen. */
+.tarjeta__portada-fallback {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 0.75rem;
+  color: var(--color-texto-inverso);
+  font-family: var(--fuente-titulos);
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: 1.2;
+  overflow-wrap: anywhere;
+  text-shadow: 0 1px 3px var(--color-sombra-fuerte);
+}
+
+.tarjeta__portada-fallback::after {
+  content: "✦";
+  position: absolute;
+  right: -0.4rem;
+  bottom: 0.25rem;
+  font-size: 5.5rem;
+  opacity: 0.16;
+  pointer-events: none;
+}
+
+.tarjeta__portada-fallback span {
+  position: relative;
+  z-index: 1;
+}
+
+.tarjeta__imagen {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.tarjeta__contenido {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.tarjeta__encabezado {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.45rem;
+  margin-bottom: var(--espacio-2);
 }
 
 .tarjeta__titulo {
-  font-size: var(--tamano-destacado);
-  line-height: var(--interlineado-titulos);
   color: var(--color-primario);
+  font-family: var(--fuente-titulos);
+  font-size: 1.17rem;
+  font-weight: 700;
+  line-height: 1.25;
+  overflow-wrap: anywhere;
+}
+
+/* Etiqueta visible; el género no se distingue solamente por color. */
+.tarjeta__genero {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  max-width: 100%;
+  padding: 0.25rem 0.6rem;
+  border: 1px solid var(--genero-sin-borde);
+  border-radius: 0.4rem;
+  background: var(--genero-sin-fondo);
+  color: var(--genero-sin-texto);
+  font-size: 0.65rem;
+  font-weight: 750;
+  line-height: 1.3;
+  letter-spacing: 0.025em;
+  text-transform: uppercase;
+}
+
+.tarjeta__genero::before {
+  content: "◇";
+  font-size: 0.9rem;
+}
+
+.tarjeta__genero--novela {
+  background: var(--genero-novela-fondo);
+  border-color: var(--genero-novela-borde);
+  color: var(--genero-novela-texto);
+}
+
+.tarjeta__genero--novela::before {
+  content: "▣";
+}
+
+.tarjeta__genero--ensayo {
+  background: var(--genero-ensayo-fondo);
+  border-color: var(--genero-ensayo-borde);
+  color: var(--genero-ensayo-texto);
+}
+
+.tarjeta__genero--ensayo::before {
+  content: "✎";
+}
+
+.tarjeta__genero--sin-clasificar {
+  background: var(--genero-sin-fondo);
+  border-color: var(--genero-sin-borde);
+  color: var(--genero-sin-texto);
 }
 
 .tarjeta__datos {
   display: grid;
-  gap: var(--espacio-1);
-  font-size: var(--tamano-texto-pequeno);
+  gap: 0.4rem;
+  flex: 1;
+  margin: 0;
+  font-size: 0.75rem;
+  line-height: 1.45;
 }
 
-/* Lista etiqueta/valor */
 .tarjeta__dato {
   display: grid;
-  grid-template-columns: 5.5rem minmax(0, 1fr);
-  gap: var(--espacio-2);
+  grid-template-columns: 4.6rem minmax(0, 1fr);
+  align-items: baseline;
+  gap: 0.4rem;
 }
 
 .tarjeta__dato dt {
@@ -49,10 +192,27 @@ output {
 }
 
 .tarjeta__dato dd {
+  min-width: 0;
   margin: 0;
+  overflow-wrap: anywhere;
+  color: var(--color-texto);
+  font-weight: 600;
 }
 
-/* D9 — formularios apilados a 320 px; dos columnas desde 48em (ver disposicion.css) */
+.tarjeta__dato--precio {
+  align-self: end;
+  margin-top: var(--espacio-2);
+  padding-top: var(--espacio-2);
+  border-top: 1px solid var(--color-borde);
+}
+
+.tarjeta__dato--precio dd {
+  color: var(--color-primario);
+  font-size: 1rem;
+  font-weight: 750;
+}
+
+/* ========== FORMULARIOS (TODAS LAS PÁGINAS) ========== */
 .formulario {
   display: flex;
   flex-direction: column;
@@ -71,16 +231,15 @@ output {
   font-weight: 600;
 }
 
-/* D9 — objetivo táctil de 2,75 rem (44 px) y ancho acotado para no estirarse a 1280 px */
 .campo__control {
-  min-height: var(--alto-tactil);
   width: 100%;
   max-width: min(100%, var(--ancho-control-maximo));
-  padding: var(--espacio-2) var(--espacio-3);
-  background-color: var(--color-superficie);
-  color: var(--color-texto);
+  min-height: var(--alto-tactil);
+  padding: 0.65rem var(--espacio-3);
+  background: var(--color-superficie);
   border: 1px solid var(--color-borde);
   border-radius: var(--radio-sm);
+  color: var(--color-texto);
   font: inherit;
   accent-color: var(--color-primario);
 }
@@ -89,7 +248,23 @@ output {
   color: var(--color-texto-suave);
 }
 
-/* D8 — error de campo: trazo lateral y símbolo; el vacío no ocupa lugar */
+.campo__control:focus-visible {
+  border-color: var(--color-primario-intermedio);
+}
+
+/* El buscador es un único campo, también en pantallas grandes. */
+.seccion--busqueda .formulario {
+  display: block;
+}
+
+.seccion--busqueda .campo__etiqueta {
+  font-size: 0.8rem;
+}
+
+.seccion--busqueda .campo__control {
+  max-width: var(--ancho-control-maximo);
+}
+
 .campo__error {
   margin: 0;
 }
@@ -99,8 +274,8 @@ output {
 }
 
 .campo__error:not(:empty) {
-  padding-inline-start: var(--espacio-2);
-  border-inline-start: var(--grosor-trazo) solid var(--color-error);
+  padding-left: var(--espacio-2);
+  border-left: var(--grosor-trazo) solid var(--color-error);
   color: var(--color-error);
   font-size: var(--tamano-texto-pequeno);
 }
@@ -109,16 +284,15 @@ output {
   content: "⚠ ";
 }
 
-/* Casillas envueltas con gap (autores de libros) */
 .grupo-opciones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--espacio-2) var(--espacio-4);
   min-width: 0;
   margin: 0;
   padding: var(--espacio-3);
   border: 1px solid var(--color-borde);
   border-radius: var(--radio-sm);
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--espacio-2) var(--espacio-4);
 }
 
 .grupo-opciones legend {
@@ -134,13 +308,11 @@ output {
   cursor: pointer;
 }
 
-/* D9 — botones con objetivo táctil de 44 px */
+/* ========== BOTONES ========== */
 .boton {
   display: inline-flex;
-  align-items: center;
   justify-content: center;
-  /* C-03 (verificación 7.3): en un flex el espacio antes de un <span> se descarta;
-     gap repone el espacio visible («Quitar <span>libro</span>») */
+  align-items: center;
   gap: var(--espacio-1);
   min-height: var(--alto-tactil);
   padding: var(--espacio-2) var(--espacio-4);
@@ -150,33 +322,33 @@ output {
   font-weight: 600;
   text-align: center;
   cursor: pointer;
-  transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+  transition: background-color 0.15s ease, border-color 0.15s ease;
 }
 
 .boton--primario {
-  background-color: var(--color-primario);
+  background: var(--color-primario);
   border-color: var(--color-primario);
   color: var(--color-texto-inverso);
 }
 
 .boton--primario:hover,
 .boton--primario:active {
-  background-color: var(--color-primario-oscuro);
+  background: var(--color-primario-oscuro);
   border-color: var(--color-primario-oscuro);
 }
 
 .boton--secundario {
-  background-color: var(--color-superficie);
+  background: var(--color-superficie);
   border-color: var(--color-primario);
   color: var(--color-primario);
 }
 
 .boton--secundario:hover,
 .boton--secundario:active {
-  background-color: var(--color-primario-claro);
+  background: var(--color-primario-claro);
 }
 
-/* D10 — el contenedor es el único desplazador de la tabla */
+/* ========== TABLAS ========== */
 .tabla-contenedor {
   max-width: 100%;
   overflow-x: auto;
@@ -184,11 +356,10 @@ output {
   border-radius: var(--radio-sm);
 }
 
-/* D11 — tabla: colapso de bordes, cabecera tintada y filas alternas */
 .tabla {
   width: 100%;
   border-collapse: collapse;
-  background-color: var(--color-superficie);
+  background: var(--color-superficie);
 }
 
 .tabla caption {
@@ -207,23 +378,27 @@ output {
 }
 
 .tabla thead th {
-  background-color: var(--color-primario-claro);
+  background: var(--color-primario-claro);
   color: var(--color-primario-oscuro);
 }
 
 .tabla tbody tr:nth-child(even) {
-  background-color: var(--color-fondo-alterno);
+  background: var(--color-fondo-alterno);
 }
 
 .tabla tbody th {
   font-weight: 600;
 }
 
-/* D8 — mensajes: trazo lateral + símbolo + fondo tintado; el texto es el diferenciador principal */
+.tabla .campo__control {
+  max-width: 6rem;
+}
+
+/* ========== MENSAJES Y RESÚMENES ========== */
 .mensaje {
   margin-block: var(--espacio-3);
   padding: var(--espacio-2) var(--espacio-3);
-  border-inline-start: var(--grosor-trazo) solid var(--color-borde);
+  border-left: var(--grosor-trazo) solid var(--color-borde);
   border-radius: var(--radio-sm);
 }
 
@@ -232,8 +407,8 @@ output {
 }
 
 .mensaje--correcto {
-  background-color: var(--color-primario-claro);
-  border-inline-start-color: var(--color-primario);
+  background: var(--color-primario-claro);
+  border-left-color: var(--color-primario);
   color: var(--color-primario-oscuro);
 }
 
@@ -242,8 +417,8 @@ output {
 }
 
 .mensaje--error {
-  background-color: var(--color-error-fondo);
-  border-inline-start-color: var(--color-error);
+  background: var(--color-error-fondo);
+  border-left-color: var(--color-error);
   color: var(--color-error);
 }
 
@@ -252,8 +427,8 @@ output {
 }
 
 .mensaje--vacio {
-  background-color: var(--color-superficie);
-  border-inline-start-color: var(--color-acento);
+  background: var(--color-superficie);
+  border-left-color: var(--color-acento);
   color: var(--color-texto-suave);
 }
 
@@ -261,14 +436,13 @@ output {
   content: "● ";
 }
 
-/* D8 y D11 — marca de maqueta: pastilla con borde punteado dorado y símbolo */
 .etiqueta-maqueta {
   display: inline-block;
   margin-block: var(--espacio-2);
   padding: var(--espacio-2) var(--espacio-3);
-  background-color: var(--color-superficie);
+  background: var(--color-superficie);
   border: 1px dashed var(--color-acento);
-  border-inline-start: var(--grosor-trazo) solid var(--color-acento);
+  border-left: var(--grosor-trazo) solid var(--color-acento);
   border-radius: var(--radio-sm);
   color: var(--color-texto-suave);
   font-size: var(--tamano-texto-pequeno);
@@ -279,12 +453,11 @@ output {
   color: var(--color-acento);
 }
 
-/* D11 — resumen de venta: panel destacado con acento dorado */
 .resumen {
   padding: var(--espacio-4);
-  background-color: var(--color-superficie);
+  background: var(--color-superficie);
   border: 1px solid var(--color-borde);
-  border-block-start: var(--grosor-trazo) solid var(--color-acento);
+  border-top: var(--grosor-trazo) solid var(--color-acento);
   border-radius: var(--radio);
   box-shadow: var(--sombra);
 }
@@ -294,15 +467,8 @@ output {
   font-weight: 600;
 }
 
-/* Dentro de las tablas, los campos compactos no necesitan el ancho máximo del formulario */
-.tabla .campo__control {
-  max-width: 6rem;
-}
-
-/* D4 y D9 — desde el único corte (48em) los campos pasan a dos columnas;
-   las secciones del formulario ocupan el ancho completo */
+/* ========== RESPONSIVE ========== */
 @media (min-width: 48em) {
-
   .formulario {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -331,9 +497,428 @@ output {
     grid-column: 1 / -1;
   }
 
-  /* El botón no estira su columna: arranca a la izquierda de su celda */
   .formulario > .boton,
   .formulario > .seccion > .boton {
     justify-self: start;
+  }
+
+  /* Evita que la búsqueda tome las dos columnas del formulario general. */
+  .seccion--busqueda .formulario {
+    display: block;
+  }
+}
+
+@media (max-width: 26rem) {
+  .tarjeta {
+    grid-template-columns: 6rem minmax(0, 1fr);
+    gap: 0.7rem;
+    padding: 0.75rem;
+  }
+
+  .tarjeta__portada-fallback {
+    padding: 0.5rem;
+    font-size: 0.8rem;
+  }
+
+  .tarjeta__titulo {
+    font-size: 1rem;
+  }
+
+  .tarjeta__dato {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0;
+  }
+
+  .tarjeta__dato--precio dd {
+    font-size: 0.9rem;
+  }
+}
+
+/* ==========================================================
+   PÁGINAS DE GESTIÓN — Misma identidad visual que el catálogo
+   Estilos compartidos para Libros, Clientes, Ventas e Historial.
+   ========================================================== */
+
+.seccion--panel,
+.seccion--listado {
+  margin-block: var(--espacio-4);
+  padding: clamp(1rem, 2.7vw, 1.75rem);
+  border: 1px solid var(--color-borde);
+  border-radius: var(--radio);
+  background: var(--color-superficie);
+  box-shadow: var(--sombra);
+}
+
+.seccion__cabecera {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.3rem;
+  margin-bottom: 1.35rem;
+  padding-bottom: 1.1rem;
+  border-bottom: 1px solid var(--color-borde);
+}
+
+.seccion__eyebrow {
+  color: var(--color-primario-intermedio);
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.13em;
+}
+
+.seccion__cabecera h2,
+.seccion > .seccion__cabecera h2 {
+  margin: 0;
+  color: var(--color-primario);
+  font-family: var(--fuente-titulos);
+  font-size: clamp(1.28rem, 2.3vw, 1.55rem);
+  line-height: 1.25;
+}
+
+.seccion__descripcion {
+  color: var(--color-texto-suave);
+  font-size: 0.875rem;
+  line-height: 1.55;
+}
+
+.seccion--panel .etiqueta-maqueta {
+  margin-top: 0;
+  margin-bottom: 1.2rem;
+}
+
+/* Campos y botones alineados, con jerarquía clara en formularios. */
+.formulario--panel {
+  column-gap: var(--espacio-4);
+  row-gap: var(--espacio-4);
+}
+
+.formulario--panel .campo__etiqueta,
+.formulario--venta .campo > .campo__etiqueta {
+  color: var(--color-primario-oscuro);
+  font-size: 0.875rem;
+}
+
+.formulario--panel > .boton {
+  margin-top: 0.2rem;
+}
+
+.campo__control {
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.campo__control:hover {
+  border-color: var(--color-borde-resaltado);
+}
+
+.campo__control:focus-visible {
+  box-shadow: 0 0 0 0.2rem var(--color-primario-claro);
+}
+
+.grupo-opciones {
+  background-color: var(--color-fondo);
+}
+
+.grupo-opciones__opcion input {
+  accent-color: var(--color-primario-intermedio);
+  width: 1.05rem;
+  height: 1.05rem;
+}
+
+/* Tablas administrativas: cabecera limpia y renglones fáciles de leer. */
+.tabla--profesional {
+  font-size: 0.875rem;
+  line-height: 1.5;
+}
+
+.tabla--profesional thead th {
+  padding: 0.9rem 1rem;
+  background-color: var(--color-primario-claro);
+  color: var(--color-primario-oscuro);
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.025em;
+  white-space: nowrap;
+}
+
+.tabla--profesional tbody td,
+.tabla--profesional tbody th {
+  padding: 0.95rem 1rem;
+  vertical-align: middle;
+}
+
+.tabla--profesional tbody tr:hover {
+  background-color: var(--color-primario-claro);
+}
+
+.tabla--profesional caption {
+  padding: 0.8rem 1rem;
+  font-size: 0.75rem;
+  color: var(--color-texto-suave);
+}
+
+.tabla--profesional [data-campo="titulo"],
+.tabla--profesional [data-campo="nombre"],
+.tabla--profesional [data-campo="cliente"] {
+  font-weight: 650;
+  color: var(--color-primario-oscuro);
+}
+
+.tabla--profesional [data-campo="precio"],
+.tabla--profesional [data-campo="total"],
+.tabla--profesional [data-campo="subtotal"] {
+  white-space: nowrap;
+  font-weight: 750;
+  color: var(--color-primario);
+}
+
+.tabla--profesional td[data-campo="isbn"] {
+  white-space: nowrap;
+}
+
+.tabla--ancha {
+  min-width: 45rem;
+}
+
+#tabla-renglones {
+  min-width: 55rem;
+}
+
+/* Estados no crean funcionalidad nueva: respetan mensajes vacíos y avisos. */
+.seccion--listado .mensaje--vacio {
+  margin-bottom: var(--espacio-3);
+}
+
+/* Contactos: el correo se ajusta al ancho de pantalla sin cortarse. */
+#tabla-clientes {
+  table-layout: fixed;
+}
+
+#tabla-clientes th:first-child,
+#tabla-clientes td:first-child {
+  width: 41%;
+}
+
+#tabla-clientes td[data-campo="email"] {
+  overflow-wrap: anywhere;
+}
+
+/* Los renglones y el resumen ocupan todo el ancho del formulario de ventas. */
+.formulario--venta {
+  gap: var(--espacio-4);
+}
+
+.formulario--venta > .seccion {
+  margin: 0;
+}
+
+.formulario--venta .seccion__cabecera {
+  width: 100%;
+}
+
+.formulario--venta .tabla-contenedor {
+  margin-top: var(--espacio-2);
+}
+
+.seccion--resumen {
+  border-top: var(--grosor-trazo) solid var(--color-acento);
+}
+
+.seccion--resumen output,
+.detalle-total output {
+  color: var(--color-primario);
+  font-size: clamp(1.4rem, 3vw, 1.85rem);
+  font-weight: 800;
+}
+
+.detalle-total {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--espacio-4);
+  margin-top: var(--espacio-4);
+  font-weight: 700;
+}
+
+/* Etiqueta accesible para cantidades sin texto duplicado en cada fila. */
+.solo-lectores {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+.tabla label.campo__etiqueta {
+  display: block;
+}
+
+/* Botones secundarios de tablas más compactos, sin perder su objetivo táctil. */
+.tabla .boton--secundario {
+  min-height: var(--alto-tactil);
+  padding: 0.5rem 0.75rem;
+  font-size: 0.8rem;
+  white-space: nowrap;
+}
+
+@media (min-width: 48em) {
+  .formulario--venta {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .formulario--venta > .seccion {
+    grid-column: 1 / -1;
+  }
+
+  .formulario--venta > .seccion > .seccion__cabecera,
+  .formulario--venta > .seccion > .etiqueta-maqueta,
+  .formulario--venta > .seccion > p,
+  .formulario--venta > .seccion > .boton,
+  .formulario--venta > .seccion > .tabla-contenedor {
+    grid-column: 1 / -1;
+  }
+
+}
+
+@media (max-width: 47.99em) {
+  .seccion--panel,
+  .seccion--listado {
+    margin-block: var(--espacio-3);
+  }
+  .tabla--profesional {
+    font-size: 0.81rem;
+  }
+}
+
+/* ==========================================================
+   VENTAS — Controles en línea y cierre de operación compacto
+   ========================================================== */
+
+/* El encabezado ocupa toda la fila; Libro, Cantidad y el botón
+   se ordenan por debajo de forma independiente del grid genérico. */
+.formulario--venta > .seccion--productos {
+  display: block;
+}
+
+.venta__controles {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 9rem auto;
+  gap: var(--espacio-3);
+  align-items: end;
+}
+
+.venta__controles .campo__control {
+  max-width: 100%;
+}
+
+.venta__controles #boton-agregar-renglon {
+  align-self: end;
+  min-height: var(--alto-tactil);
+  margin: 0;
+  white-space: nowrap;
+}
+
+.seccion--productos .tabla-contenedor {
+  margin-top: var(--espacio-4);
+}
+
+/* Resumen horizontal: título, precio dominante y acción alineada. */
+.formulario--venta > .seccion--resumen {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: var(--espacio-4);
+}
+
+.formulario--venta > .seccion--resumen > .seccion__cabecera {
+  grid-column: 1;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.resumen__cierre {
+  grid-column: 2;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: clamp(1rem, 2.8vw, 2.25rem);
+}
+
+.resumen__importe {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.15rem;
+}
+
+.resumen__etiqueta {
+  color: var(--color-texto-suave);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.seccion--resumen .resumen__importe output {
+  color: var(--color-primario);
+  font-size: clamp(2rem, 3.2vw, 2.75rem);
+  font-weight: 800;
+  line-height: 1.12;
+  white-space: nowrap;
+}
+
+.resumen__cierre .boton {
+  margin: 0;
+  white-space: nowrap;
+}
+
+/* Tablet: la selección de libro ocupa una fila completa; 
+   cantidad y acción siguen una al lado de la otra. */
+@media (max-width: 62rem) {
+  .venta__controles {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .venta__controles > .campo:first-child {
+    grid-column: 1 / -1;
+  }
+
+  .formulario--venta > .seccion--resumen {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .resumen__cierre {
+    justify-content: space-between;
+  }
+}
+
+/* Celular angosto: apilado para que ningún botón desborde. */
+@media (max-width: 32rem) {
+  .venta__controles {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .venta__controles > .campo:first-child {
+    grid-column: auto;
+  }
+
+  .venta__controles #boton-agregar-renglon {
+    width: 100%;
+  }
+
+  .resumen__cierre {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .resumen__cierre .boton {
+    width: 100%;
   }
 }

@@ -1,39 +1,60 @@
-/* Base: variables del sistema visual, reinicio mínimo y foco visible.
-   Change presentacion-css-y-uso-adaptable (design D1, D2, D3, D6, D7).
-   Es la única hoja que declara colores con valores sueltos; las demás solo usan var(--...). */
+/* ==========================================================
+   LIBRERÍA EL FARO — BASE
+   Paleta C: verde petróleo + marfil + acento dorado.
+   Mantener los colores definidos acá, no dispersos en otras hojas.
+   ========================================================== */
 
-/* D1 y D3 — identidad visual declarada una sola vez */
 :root {
-  /* Paleta «verde biblioteca + crema», solo modo claro */
-  --color-fondo: #faf7ef;
+  /* Identidad y superficies */
+  --color-fondo: #f4f7f4;
   --color-superficie: #ffffff;
-  --color-texto: #2a2a24;
-  --color-texto-suave: #55554c;
-  --color-primario: #2f5d3a;
-  --color-primario-oscuro: #24492f;
-  --color-primario-claro: #e7f0e8;
-  --color-acento: #8f6210;
-  --color-acento-claro: #f4d58d;
+  --color-fondo-alterno: #e8eeea;
+  --color-texto: #243431;
+  --color-texto-suave: #657a72;
+  --color-texto-inverso: #ffffff;
+  --color-primario: #214e4a;
+  --color-primario-oscuro: #173b38;
+  --color-primario-intermedio: #39746b;
+  --color-primario-claro: #e3ede8;
+  --color-acento: #a57836;
+  --color-acento-claro: #f1dcb3;
+  --color-borde: #d9e5df;
+  --color-borde-resaltado: #a9c9bd;
   --color-error: #93201a;
   --color-error-fondo: #f7e8e6;
-  --color-borde: #d9d2c1;
-  --color-texto-inverso: #ffffff;
-  --color-fondo-alterno: #f2ecdc;
+  --color-sombra: rgba(32, 78, 73, 0.09);
+  --color-sombra-fuerte: rgba(32, 78, 73, 0.15);
 
-  /* D2 — tipografía del sistema (sin @font-face ni archivos de fuente) */
+  /* Etiquetas de género */
+  --genero-novela-fondo: #ddf0ea;
+  --genero-novela-borde: #b8dcd0;
+  --genero-novela-texto: #245c4d;
+  --genero-ensayo-fondo: #fff0d6;
+  --genero-ensayo-borde: #f0d7a8;
+  --genero-ensayo-texto: #805313;
+  --genero-sin-fondo: #edefef;
+  --genero-sin-borde: #cdd5d3;
+  --genero-sin-texto: #52615e;
+
+  /* Portadas ficticias cuando no hay imagen */
+  --portada-default: linear-gradient(155deg, #214e4a, #39746b);
+  --portada-novela: linear-gradient(160deg, #173e4c, #327783 65%, #9faca0);
+  --portada-ensayo: linear-gradient(160deg, #6b543f, #a28765 75%, #cab39b);
+  --portada-sin-clasificar: linear-gradient(160deg, #4a647a, #859cac 75%, #bdc6cc);
+
+  /* Tipografía */
   --fuente-sans: system-ui, "Segoe UI", Roboto, Arial, sans-serif;
+  --fuente-titulos: Georgia, "Times New Roman", serif;
   --fuente-mono: ui-monospace, "Cascadia Mono", Consolas, "Courier New", monospace;
-
-  /* Escala tipográfica (rem, base 16 px) */
   --tamano-texto-pequeno: 0.875rem;
   --tamano-cuerpo: 1rem;
   --tamano-destacado: 1.125rem;
   --tamano-titulo: 1.375rem;
-  --tamano-titulo-principal: 1.75rem;
+  --tamano-titulo-principal: clamp(2rem, 4vw, 2.625rem);
   --interlineado-cuerpo: 1.5;
   --interlineado-titulos: 1.2;
 
-  /* Espaciado (base 4 px) */
+  /* Espaciado */
   --espacio-1: 0.25rem;
   --espacio-2: 0.5rem;
   --espacio-3: 1rem;
@@ -41,21 +62,25 @@
   --espacio-5: 2rem;
   --espacio-6: 3rem;
 
-  /* Radios, sombra y medidas */
-  --radio: 0.5rem;
-  --radio-sm: 0.25rem;
-  --sombra: 0 1px 3px rgba(42, 42, 36, 0.12);
+  /* Dimensiones y efectos */
+  --radio: 0.75rem;
+  --radio-sm: 0.5rem;
+  --sombra: 0 3px 14px var(--color-sombra);
+  --sombra-hover: 0 12px 26px var(--color-sombra-fuerte);
   --ancho-maximo: 70rem;
-  --ancho-control-maximo: 30rem;
+  --ancho-control-maximo: 34rem;
   --alto-tactil: 2.75rem;
   --grosor-trazo: 0.25rem;
 }
 
-/* Reinicio mínimo (design D2 y tarea 1.2) */
 *,
 *::before,
 *::after {
   box-sizing: border-box;
+}
+
+html {
+  min-width: 320px;
 }
 
 body {
@@ -63,17 +88,14 @@ body {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  background-color: var(--color-fondo);
+  background: var(--color-fondo);
   color: var(--color-texto);
   font-family: var(--fuente-sans);
   font-size: var(--tamano-cuerpo);
   line-height: var(--interlineado-cuerpo);
 }
 
-h1,
-h2,
-h3,
-p {
+h1, h2, h3, p {
   margin: 0;
 }
 
@@ -83,12 +105,10 @@ img {
   height: auto;
 }
 
-/* D6 — hidden es el único mecanismo de mostrar/ocultar y ningún display de componente lo anula */
 [hidden] {
   display: none !important;
 }
 
-/* D7 — foco visible en todo control; dorado sobre fondos claros y dorado claro sobre el verde del encabezado */
 :focus-visible {
   outline: 0.1875rem solid var(--color-acento);
   outline-offset: 0.125rem;
@@ -98,12 +118,8 @@ img {
   outline-color: var(--color-acento-claro);
 }
 
-/* D7 — las transiciones de hover son el único movimiento del CSS */
 @media (prefers-reduced-motion: reduce) {
-
-  *,
-  *::before,
-  *::after {
+  *, *::before, *::after {
     transition: none !important;
     animation: none !important;
   }
