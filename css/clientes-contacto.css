@@ -1,0 +1,129 @@
+/* Complemento exclusivo de Gestión de clientes. No modifica otros formularios. */
+.formulario--cliente .campo__ayuda {
+  color: var(--color-texto-suave);
+  font-size: .77rem;
+  line-height: 1.35;
+}
+
+/* Tres datos de contacto en una misma fila cuando hay espacio. */
+@media (min-width: 68rem) {
+  .formulario--cliente {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+/* Evita que el número quede separado por caracteres en las tablas. */
+#tabla-clientes td[data-campo="telefono"] {
+  white-space: nowrap;
+}
+
+
+/* Acciones del directorio: borde dorado fino, sin efectos tridimensionales. */
+#tabla-clientes th:last-child,
+#tabla-clientes td[data-campo="acciones"] {
+  text-align: right;
+  white-space: nowrap;
+}
+#tabla-clientes .cliente-editar {
+  min-height: 2.25rem;
+  padding: 0.4rem 0.85rem;
+  color: #245044;
+  border: 1px solid #b99964;
+  background: #fffaf0;
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+#tabla-clientes .cliente-editar:hover,
+#tabla-clientes .cliente-editar:focus-visible {
+  color: #143d33;
+  background: #f4e8d0;
+  border-color: #a67b3c;
+}
+
+/* Ventana nativa de edición, integrada a la estética editorial de El Faro. */
+.cliente-modal {
+  width: min(100% - 1.5rem, 38rem);
+  max-width: 38rem;
+  max-height: calc(100dvh - 2rem);
+  margin: auto;
+  padding: 0;
+  border: 0;
+  border-radius: 14px;
+  background: #fffcf6;
+  color: var(--color-texto);
+  box-shadow: 0 24px 75px #091d18a3;
+  overflow-y: auto;
+}
+.cliente-modal:not([open]) { display: none; }
+.cliente-modal::backdrop {
+  background: rgba(8, 29, 24, 0.7);
+  backdrop-filter: blur(4px);
+}
+.cliente-modal__caja { border-top: 4px solid #c9a36c; }
+.cliente-modal__cabecera {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  justify-content: space-between;
+  padding: 1.6rem 1.75rem 1.3rem;
+  border-bottom: 1px solid #e6decf;
+  background: linear-gradient(145deg, #fffdf7, #f7f3e9);
+}
+.cliente-modal__eyebrow {
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  color: #997039;
+  margin-bottom: 0.45rem;
+}
+.cliente-modal__cabecera h2 {
+  margin: 0 0 0.5rem;
+  font-family: var(--fuente-titulos);
+  color: #184639;
+  font-size: clamp(1.6rem, 3vw, 2rem);
+}
+.cliente-modal__cabecera p:last-child {
+  font-size: 0.87rem;
+  line-height: 1.5;
+  color: var(--color-texto-suave);
+}
+.cliente-modal__cerrar {
+  flex: 0 0 auto;
+  width: 2.35rem;
+  height: 2.35rem;
+  border-radius: 50%;
+  border: 1px solid #d9ccba;
+  background: #fffdf8;
+  color: #285347;
+  font-size: 1.5rem;
+  line-height: 1;
+  cursor: pointer;
+}
+.cliente-modal__cerrar:hover { background: #f4e7d2; }
+.cliente-modal__formulario {
+  display: grid;
+  gap: 1rem;
+  padding: 1.6rem 1.75rem 1.75rem;
+}
+.cliente-modal__formulario .campo__etiqueta { color: #204b40; font-size: 0.88rem; }
+.cliente-modal__formulario .campo__control { max-width: 100%; }
+.cliente-modal__formulario .campo__ayuda { color: var(--color-texto-suave); font-size: 0.76rem; }
+.cliente-modal__formulario .mensaje { margin: 0; }
+.cliente-modal__acciones {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  margin-top: 0.4rem;
+  padding-top: 1rem;
+  border-top: 1px solid #e8ddca;
+}
+.cliente-modal :focus-visible { outline: 2px solid #bd935b; outline-offset: 2px; }
+@media (max-width: 520px) {
+  .cliente-modal__cabecera { padding: 1.25rem 1rem; }
+  .cliente-modal__formulario { padding: 1.25rem 1rem; }
+  .cliente-modal__acciones > button { flex: 1 1 auto; }
+}
+@media (prefers-reduced-motion: reduce) {
+  #tabla-clientes .cliente-editar { transition: none; }
+}

@@ -9,6 +9,7 @@
     <link href="css/base.css" rel="stylesheet" />
     <link href="css/disposicion.css" rel="stylesheet" />
     <link href="css/componentes.css" rel="stylesheet" />
+    <link href="css/clientes-contacto.css" rel="stylesheet" />
     <script src="js/datos/datos-iniciales.js" defer></script>
     <script src="js/logica/texto.js" defer></script>
     <script src="js/logica/clientes.js" defer></script>
@@ -40,7 +41,7 @@
         <div class="contenido__introduccion">
             <p class="contenido__ruta">Inicio / Clientes</p>
             <h1>Gestión de clientes</h1>
-            <p class="contenido__descripcion">Consultá los clientes de la librería y accedé al formulario de registro.
+            <p class="contenido__descripcion">Registrá clientes y actualizá sus datos de contacto desde el directorio.
             </p>
         </div>
         <section aria-labelledby="titulo-alta-cliente" class="seccion seccion--panel">
@@ -52,7 +53,7 @@
 
             <p class="mensaje mensaje--correcto" id="mensaje-estado" role="status"></p>
             <p class="mensaje mensaje--error" id="mensaje-error" role="alert"></p>
-            <form class="formulario formulario--panel" id="form-cliente" novalidate="">
+            <form class="formulario formulario--panel formulario--cliente" id="form-cliente" novalidate="">
                 <div class="campo">
                     <label class="campo__etiqueta" for="cliente-nombre">Nombre completo</label>
                     <input aria-describedby="error-cliente-nombre" autocomplete="off" class="campo__control"
@@ -65,6 +66,14 @@
                         id="cliente-email" name="email" type="email" />
                     <p class="campo__error" id="error-cliente-email"></p>
                 </div>
+                <div class="campo">
+                    <label class="campo__etiqueta" for="cliente-telefono">Teléfono</label>
+                    <input aria-describedby="ayuda-cliente-telefono error-cliente-telefono" autocomplete="tel"
+                        class="campo__control" id="cliente-telefono" name="telefono" type="tel"
+                        placeholder="Ej.: +54 9 261 123 4567" maxlength="25" />
+                    <small class="campo__ayuda" id="ayuda-cliente-telefono">Podés incluir código de área, espacios y guiones.</small>
+                    <p class="campo__error" id="error-cliente-telefono"></p>
+                </div>
                 <button class="boton boton--primario" type="submit">Registrar cliente</button>
             </form>
         </section>
@@ -72,7 +81,7 @@
             <div class="seccion__cabecera">
                 <p class="seccion__eyebrow">02 · DIRECTORIO</p>
                 <h2 id="titulo-listado-clientes">Clientes registrados</h2>
-                <p class="seccion__descripcion">Información de contacto de los clientes de la librería.</p>
+                <p class="seccion__descripcion">Consultá y editá nombre, correo y teléfono sin eliminar el cliente.</p>
             </div>
 
             <p class="mensaje mensaje--vacio" hidden="" id="clientes-vacio">No hay clientes registrados.</p>
@@ -83,20 +92,28 @@
                         <tr>
                             <th scope="col">Nombre completo</th>
                             <th scope="col">Email</th>
+                            <th scope="col">Teléfono</th>
+                            <th scope="col">Acciones</th>
                         </tr>
                     </thead>
                     <tbody id="filas-clientes">
                         <tr>
                             <td data-campo="nombre">Lucía Fernández</td>
                             <td data-campo="email">lucia.fernandez@example.com</td>
+                            <td data-campo="telefono">—</td>
+                            <td><button type="button" class="boton cliente-editar" data-accion="editar-cliente">Editar</button></td>
                         </tr>
                         <tr>
                             <td data-campo="nombre">Martín Gómez</td>
                             <td data-campo="email">martin.gomez@example.com</td>
+                            <td data-campo="telefono">—</td>
+                            <td><button type="button" class="boton cliente-editar" data-accion="editar-cliente">Editar</button></td>
                         </tr>
                         <tr>
                             <td data-campo="nombre">Carla Ruiz</td>
                             <td data-campo="email">carla.ruiz@example.com</td>
+                            <td data-campo="telefono">—</td>
+                            <td><button type="button" class="boton cliente-editar" data-accion="editar-cliente">Editar</button></td>
                         </tr>
                     </tbody>
                 </table>
@@ -106,8 +123,52 @@
             <tr>
                 <td data-campo="nombre"></td>
                 <td data-campo="email"></td>
+                <td data-campo="telefono"></td>
+                <td data-campo="acciones"><button type="button" class="boton cliente-editar" data-accion="editar-cliente">Editar</button></td>
             </tr>
         </template>
+        <!-- Se abre exclusivamente desde el botón Editar de una fila. -->
+        <dialog id="dialogo-editar-cliente" class="cliente-modal" aria-labelledby="titulo-editar-cliente"
+            aria-describedby="descripcion-editar-cliente">
+            <div class="cliente-modal__caja">
+                <header class="cliente-modal__cabecera">
+                    <div>
+                        <p class="cliente-modal__eyebrow">DIRECTORIO · DATOS DE CONTACTO</p>
+                        <h2 id="titulo-editar-cliente">Editar cliente</h2>
+                        <p id="descripcion-editar-cliente">Modificá los datos y guardá los cambios. El historial de ventas se conserva.</p>
+                    </div>
+                    <button id="cerrar-edicion-cliente" class="cliente-modal__cerrar" type="button"
+                        aria-label="Cerrar edición">&times;</button>
+                </header>
+                <form id="form-editar-cliente" class="cliente-modal__formulario" novalidate>
+                    <p id="mensaje-error-edicion" class="mensaje mensaje--error" role="alert" hidden></p>
+                    <div class="campo">
+                        <label class="campo__etiqueta" for="editar-cliente-nombre">Nombre completo</label>
+                        <input id="editar-cliente-nombre" class="campo__control" type="text" name="nombre"
+                            autocomplete="name" aria-describedby="error-editar-cliente-nombre" required>
+                        <p id="error-editar-cliente-nombre" class="campo__error"></p>
+                    </div>
+                    <div class="campo">
+                        <label class="campo__etiqueta" for="editar-cliente-email">Email</label>
+                        <input id="editar-cliente-email" class="campo__control" type="email" name="email"
+                            autocomplete="email" aria-describedby="error-editar-cliente-email" required>
+                        <p id="error-editar-cliente-email" class="campo__error"></p>
+                    </div>
+                    <div class="campo">
+                        <label class="campo__etiqueta" for="editar-cliente-telefono">Teléfono</label>
+                        <input id="editar-cliente-telefono" class="campo__control" type="tel" name="telefono"
+                            autocomplete="tel" maxlength="25" placeholder="Ej.: +54 9 261 123 4567"
+                            aria-describedby="ayuda-editar-cliente-telefono error-editar-cliente-telefono" required>
+                        <small id="ayuda-editar-cliente-telefono" class="campo__ayuda">Podés incluir código de área, espacios y guiones.</small>
+                        <p id="error-editar-cliente-telefono" class="campo__error"></p>
+                    </div>
+                    <div class="cliente-modal__acciones">
+                        <button id="cancelar-edicion-cliente" type="button" class="boton boton--secundario">Cancelar</button>
+                        <button type="submit" class="boton boton--primario">Guardar cambios</button>
+                    </div>
+                </form>
+            </div>
+        </dialog>
     </main>
     <footer class="pie">
         <p>Trabajo Práctico Integrador · Programación III · UTN</p>

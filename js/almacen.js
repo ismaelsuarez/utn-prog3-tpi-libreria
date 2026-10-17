@@ -219,6 +219,27 @@
       escribirLista(CLAVE_CLIENTES, lista.concat([registro]));
       return copiarRegistro(registro);
     },
+    actualizarCliente: function (id, cambios) {
+      // Conserva el ID y cualquier propiedad no editable. Así las ventas
+      // anteriores siguen apuntando al mismo cliente.
+      const lista = leerLista(CLAVE_CLIENTES, datos.clientes, copiarRegistro);
+      const posicion = lista.findIndex(function (cliente) { return cliente.id === id; });
+      if (posicion === -1) {
+        throw new Error("El cliente que intentás editar ya no existe.");
+      }
+      if (!cambios || typeof cambios !== "object") {
+        throw new Error("No se recibieron datos para actualizar.");
+      }
+      const actualizado = Object.assign({}, lista[posicion], {
+        nombreCompleto: cambios.nombreCompleto,
+        email: cambios.email,
+        telefono: cambios.telefono
+      });
+      lista[posicion] = actualizado;
+      // Una sola escritura de clientes. No modifica ventas ni otros registros.
+      escribirLista(CLAVE_CLIENTES, lista);
+      return copiarRegistro(actualizado);
+    },
     agregarVenta: function (venta) {
       const storage = obtenerStorageVentas();
       const lista = leerVentas(storage);
