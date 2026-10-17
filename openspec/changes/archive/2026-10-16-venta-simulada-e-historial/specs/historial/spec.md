@@ -1,0 +1,44 @@
+# Spec Delta
+
+## ADDED Requirements
+
+### Requirement: Historial desde ventas guardadas
+El Historial SHALL listar las ventas recuperadas del almacén, sin filas de ejemplo, con identificador, fecha, cliente y total. Si no hay ventas SHALL mostrar un mensaje de lista vacía y no presentar un detalle ficticio. Un fallo de lectura SHALL comunicarse como error, no como una consulta exitosa sin ventas.
+
+#### Scenario: Venta recuperada al abrir
+- **WHEN** se confirma una venta y luego se abre Historial
+- **THEN** aparece esa venta con los datos e importes guardados
+
+#### Scenario: Ninguna venta confirmada
+- **WHEN** el almacén devuelve una lista de ventas vacía
+- **THEN** se muestra «No hay ventas confirmadas.» y el detalle permanece oculto
+
+#### Scenario: Lectura fallida
+- **WHEN** falla el acceso al almacenamiento al consultar el historial
+- **THEN** se informa el error sin presentar las filas de maqueta ni afirmar que la consulta terminó correctamente
+
+### Requirement: Fecha local de presentación
+El Historial SHALL presentar la fecha de cada venta como `dd/mm/aaaa HH:mm`, con ceros iniciales y reloj de 24 horas, según la zona horaria local del navegador. La fecha ISO almacenada SHALL conservarse sin modificación.
+
+#### Scenario: Fecha y hora local
+- **WHEN** el instante guardado corresponde localmente al 5 de enero de 2026 a las 9 horas y 7 minutos
+- **THEN** se muestra `05/01/2026 09:07`
+
+#### Scenario: Cambio de día entre UTC y hora local
+- **WHEN** una venta tiene fecha `2026-01-06T01:07:00.000Z` y el navegador está en UTC-03:00
+- **THEN** se muestra `05/01/2026 22:07` y la fecha ISO guardada no cambia
+
+### Requirement: Detalle histórico independiente del catálogo
+El detalle SHALL mostrar en la misma página los renglones de la venta seleccionada y su total, leyendo exclusivamente los datos descriptivos e importes de esa venta. Cambios posteriores del catálogo o del cliente SHALL dejar intacto ese detalle. La consulta SHALL ser accesible por teclado y no ofrecer edición ni eliminación.
+
+#### Scenario: Seleccionar otra venta
+- **WHEN** se activa el botón identificado de una venta distinta
+- **THEN** el detalle se actualiza con su identificador y sus renglones, sin mezclar filas de la venta anterior, y el usuario puede localizarlo mediante el foco
+
+#### Scenario: Cambio exclusivo del precio del catálogo
+- **WHEN** se modifica el precio de un libro en el catálogo guardado de una copia de prueba y se recarga el historial
+- **THEN** la venta anterior conserva unitario, subtotales y total confirmados (CM-6)
+
+#### Scenario: Datos descriptivos posteriores
+- **WHEN** cambian fuera de la venta los datos descriptivos de un libro o cliente
+- **THEN** el historial conserva el cliente, título e ISBN copiados al confirmar, sin depender de consultas al catálogo

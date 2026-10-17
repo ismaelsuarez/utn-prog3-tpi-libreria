@@ -4,7 +4,11 @@
   // Escritura:
   //   agregarLibro(libro)    - registra un libro (C-04, alta-de-libros-y-clientes).
   //   agregarCliente(cliente)- registra un cliente (C-04, alta-de-libros-y-clientes).
-  //   agregarVenta(venta)    - registra una venta confirmada. Se implementa en C-05 (venta-simulada-e-historial).
+  //   agregarVenta(venta)    - recibe una instantánea validada, asigna ven-XX y
+  //                            devuelve una copia independiente de lo guardado.
+  // Las ventas no validan reglas de negocio ni normalizan importes. Los fallos
+  // de almacenamiento se propagan; solo Node sin storage usa memoria. La UI
+  // debe conservar el borrador hasta que agregarVenta termine correctamente.
 
   const datos = (typeof module !== "undefined" && module.exports)
     ? require("./datos/datos-iniciales.js")
@@ -12,10 +16,11 @@
 
   const CLAVE_LIBROS = "libreria.libros";
   const CLAVE_CLIENTES = "libreria.clientes";
+  const CLAVE_VENTAS = "libreria.ventas";
 
   // Punto de inyección del storage: toda lectura y escritura pasan por
-  // obtenerStorage(). Cuando no hay storage disponible (Node en las pruebas)
-  // el almacén opera en memoria sobre esta reserva.
+  // obtenerStorage() para libros/clientes y obtenerStorageVentas() para ventas.
+  // Cuando no hay storage en Node, el almacén usa esta reserva en memoria.
   const memoria = {};
 
   function obtenerStorage() {
@@ -36,6 +41,50 @@
 
   function copiarRegistro(registro) {
     return Object.assign({}, registro);
+  }
+
+  function esObjeto(valor) {
+    return valor !== null && typeof valor === "object" && !Array.isArray(valor);
+  }
+
+  function copiarVenta(venta) {
+    // Solo comprueba la estructura necesaria para copiar; no reglas de negocio.
+    if (!esObjeto(venta) || !esObjeto(venta.cliente) ||
+        !Array.isArray(venta.renglones) || !venta.renglones.every(esObjeto)) {
+      throw new Error("La venta no tiene una estructura válida.");
+    }
+    return Object.assign({}, venta, {
+      cliente: copiarRegistro(venta.cliente),
+      renglones: venta.renglones.map(copiarRegistro)
+    });
+  }
+
+  function obtenerStorageVentas() {
+    // En navegador no se anuncia persistencia cuando el acceso está bloqueado.
+    const storage = raiz.localStorage;
+    if (storage && typeof storage.getItem === "function" && typeof storage.setItem === "function") {
+      return storage;
+    }
+    if (typeof window !== "undefined" || (storage !== null && storage !== undefined)) {
+      throw new Error("El almacenamiento de ventas no está disponible.");
+    }
+    return null;
+  }
+
+  // A diferencia de libros/clientes, las ventas ilegibles no se reemplazan.
+  function leerVentas(storage) {
+    if (!storage) {
+      return (memoria[CLAVE_VENTAS] || []).map(copiarVenta);
+    }
+    const crudo = storage.getItem(CLAVE_VENTAS);
+    if (crudo === null || crudo === undefined) {
+      return [];
+    }
+    const lista = JSON.parse(crudo);
+    if (!Array.isArray(lista)) {
+      throw new Error("Las ventas guardadas no contienen una lista válida.");
+    }
+    return lista.map(copiarVenta);
   }
 
   // Lee la clave guardada; si falta, no es un arreglo JSON válido o no hay
@@ -94,7 +143,7 @@
       return leerLista(CLAVE_CLIENTES, datos.clientes, copiarRegistro);
     },
     obtenerVentas: function () {
-      return [];
+      return leerVentas(obtenerStorageVentas());
     },
     obtenerEditoriales: function () {
       return datos.editoriales.map(copiarRegistro);
@@ -125,8 +174,17 @@
       escribirLista(CLAVE_CLIENTES, lista.concat([registro]));
       return copiarRegistro(registro);
     },
-    agregarVenta: function () {
-      throw new Error("agregarVenta: pendiente de implementación (C-05 venta-simulada-e-historial)");
+    agregarVenta: function (venta) {
+      const storage = obtenerStorageVentas();
+      const lista = leerVentas(storage);
+      const registro = Object.assign(copiarVenta(venta), { id: siguienteId(lista, "ven") });
+      const actualizada = lista.concat([registro]);
+      if (storage) {
+        storage.setItem(CLAVE_VENTAS, JSON.stringify(actualizada));
+      } else {
+        memoria[CLAVE_VENTAS] = actualizada;
+      }
+      return copiarVenta(registro);
     }
   };
 

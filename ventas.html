@@ -9,7 +9,12 @@
     <link href="css/base.css" rel="stylesheet" />
     <link href="css/disposicion.css" rel="stylesheet" />
     <link href="css/componentes.css" rel="stylesheet" />
-  <link rel="stylesheet" href="css/vista-inmersiva.css">
+    <link rel="stylesheet" href="css/vista-inmersiva.css">
+    <script defer src="js/datos/datos-iniciales.js"></script>
+    <script defer src="js/logica/ventas.js"></script>
+    <script defer src="js/almacen.js"></script>
+    <script defer src="js/interfaz.js"></script>
+    <script defer src="js/paginas/ventas.js"></script>
 </head>
 
 <body>
@@ -34,11 +39,9 @@
         <div class="contenido__introduccion">
             <p class="contenido__ruta">Inicio / Ventas</p>
             <h1>Registrar una venta</h1>
-            <p class="contenido__descripcion">Seleccioná un cliente, elegí los libros y revisá el resumen antes de
+            <p class="contenido__descripcion">Seleccione un cliente, elija los libros y revise el resumen antes de
                 confirmar.</p>
         </div>
-        <p class="etiqueta-maqueta"><strong>Maqueta:</strong> los controles de esta vista todavía no componen ni
-            confirman ventas. Los renglones y el total son un ejemplo.</p>
         <p class="mensaje mensaje--correcto" id="mensaje-estado" role="status"></p>
         <p class="mensaje mensaje--error" id="mensaje-error" role="alert"></p>
         <form class="formulario formulario--venta" id="form-venta" novalidate="">
@@ -46,7 +49,7 @@
                 <div class="seccion__cabecera">
                     <p class="seccion__eyebrow">01 · CLIENTE</p>
                     <h2 id="titulo-venta-cliente">Datos del cliente</h2>
-                    <p class="seccion__descripcion">Seleccioná a quién corresponde esta venta.</p>
+                    <p class="seccion__descripcion">Seleccione a quién corresponde esta venta.</p>
                 </div>
 
                 <div class="campo">
@@ -54,9 +57,6 @@
                     <select aria-describedby="error-venta-cliente" class="campo__control" id="venta-cliente"
                         name="cliente">
                         <option value="">Elegir un cliente</option>
-                        <option value="cliente-1">Lucía Fernández</option>
-                        <option value="cliente-2">Martín Gómez</option>
-                        <option value="cliente-3">Carla Ruiz</option>
                     </select>
                     <p class="campo__error" id="error-venta-cliente"></p>
                 </div>
@@ -65,7 +65,7 @@
                 <div class="seccion__cabecera">
                     <p class="seccion__eyebrow">02 · PRODUCTOS</p>
                     <h2 id="titulo-venta-renglones">Libros de la venta</h2>
-                    <p class="seccion__descripcion">Elegí los títulos y especificá las cantidades.</p>
+                    <p class="seccion__descripcion">Elija los títulos y especifique las cantidades.</p>
                 </div>
 
                 <div class="venta__controles">
@@ -74,12 +74,6 @@
                         <select aria-describedby="error-venta-libro" class="campo__control" id="venta-libro"
                             name="libro">
                             <option value="">Elegir un libro</option>
-                            <option value="libro-1">El faro de los vientos</option>
-                            <option value="libro-2">Cartas desde el sur</option>
-                            <option value="libro-3">Mapas para perderse</option>
-                            <option value="libro-4">La casa del río</option>
-                            <option value="libro-5">Breve historia del silencio</option>
-                            <option value="libro-6">Los días contados</option>
                         </select>
                         <p class="campo__error" id="error-venta-libro"></p>
                     </div>
@@ -92,9 +86,9 @@
                     <button class="boton boton--secundario" id="boton-agregar-renglon" type="button">Agregar
                         renglón</button>
                 </div>
-                <p class="mensaje mensaje--vacio" hidden="" id="renglones-vacio">La venta todavía no tiene renglones.
+                <p class="mensaje mensaje--vacio" id="renglones-vacio">La venta todavía no tiene renglones.
                 </p>
-                <div class="tabla-contenedor">
+                <div class="tabla-contenedor" tabindex="0" role="region" aria-label="Renglones de la venta">
                     <table class="tabla tabla--profesional tabla--ancha" id="tabla-renglones">
                         <caption>Renglones de la venta</caption>
                         <thead>
@@ -106,38 +100,7 @@
                                 <th scope="col">Acciones</th>
                             </tr>
                         </thead>
-                        <tbody id="filas-renglones">
-                            <tr>
-                                <th data-campo="libro" scope="row">El faro de los vientos</th>
-                                <td>
-                                    <label class="campo__etiqueta"><span class="solo-lectores">Cantidad de <span
-                                                data-campo="libro">El faro de los vientos</span>
-                                        </span><input class="campo__control" data-campo="cantidad" min="1"
-                                            name="cantidad-renglon" step="1" type="number" value="2" />
-                                    </label>
-                                </td>
-                                <td data-campo="precio-unitario">$ 1500,00</td>
-                                <td data-campo="subtotal">$ 3000,00</td>
-                                <td><button class="boton boton--secundario" data-accion="quitar-renglon"
-                                        type="button">Quitar <span data-campo="libro">El faro de los
-                                            vientos</span></button></td>
-                            </tr>
-                            <tr>
-                                <th data-campo="libro" scope="row">Cartas desde el sur</th>
-                                <td>
-                                    <label class="campo__etiqueta"><span class="solo-lectores">Cantidad de <span
-                                                data-campo="libro">Cartas desde el sur</span>
-                                        </span><input class="campo__control" data-campo="cantidad" min="1"
-                                            name="cantidad-renglon" step="1" type="number" value="1" />
-                                    </label>
-                                </td>
-                                <td data-campo="precio-unitario">$ 2000,00</td>
-                                <td data-campo="subtotal">$ 2000,00</td>
-                                <td><button class="boton boton--secundario" data-accion="quitar-renglon"
-                                        type="button">Quitar <span data-campo="libro">Cartas desde el
-                                            sur</span></button></td>
-                            </tr>
-                        </tbody>
+                        <tbody id="filas-renglones"></tbody>
                     </table>
                 </div>
             </section>
@@ -145,13 +108,13 @@
                 <div class="seccion__cabecera">
                     <p class="seccion__eyebrow">03 · TOTAL</p>
                     <h2 id="titulo-venta-resumen">Resumen de la venta</h2>
-                    <p class="seccion__descripcion">Revisá el importe final de la operación.</p>
+                    <p class="seccion__descripcion">Revise el importe final de la operación.</p>
                 </div>
 
                 <div class="resumen__cierre">
                     <div class="resumen__importe">
                         <span class="resumen__etiqueta">Total a pagar</span>
-                        <output id="venta-total" aria-live="polite">$ 5000,00</output>
+                        <output id="venta-total" aria-live="polite">$ 0,00</output>
                     </div>
                     <button class="boton boton--primario" id="boton-confirmar-venta" type="submit">Confirmar
                         venta</button>
@@ -162,10 +125,11 @@
             <tr>
                 <th data-campo="libro" scope="row"></th>
                 <td>
-                    <label class="campo__etiqueta">Cantidad de <span data-campo="libro"></span>
+                    <label class="campo__etiqueta"><span class="solo-lectores">Cantidad de <span data-campo="libro"></span></span>
                         <input class="campo__control" data-campo="cantidad" min="1" name="cantidad-renglon" step="1"
                             type="number" />
                     </label>
+                    <p class="campo__error" data-campo="error-cantidad" hidden></p>
                 </td>
                 <td data-campo="precio-unitario"></td>
                 <td data-campo="subtotal"></td>

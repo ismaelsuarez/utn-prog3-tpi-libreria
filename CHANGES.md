@@ -239,7 +239,7 @@ Notas: el paso 3 es el cuello de botella real (C-04 y C-05 usan el almacén de C
 ---
 
 ### [C-05] `venta-simulada-e-historial`
-- **Estado**: `[ ]` pendiente
+- **Estado**: `[x]` archivado el 2026-10-16 (`openspec/changes/archive/2026-10-16-venta-simulada-e-historial/`)
 - **Scope**:
   - Trazabilidad: **Ejercicio 5, 20 puntos** (composición y validaciones 8; cálculos 5; confirmación e historial inmutable 7). US-011, US-012, US-013 y US-014. Reglas: RN-VE-01 a RN-VE-15, RN-HI-01 a RN-HI-04.
   - `js/logica/ventas.js` (pura): agregar renglón con cantidad entera mayor que cero; libro repetido sin crear otro renglón (cerrar PA-06: sumar cantidad o informar el duplicado); cambiar cantidad; quitar renglón; subtotal = cantidad × precio y total = suma de subtotales, con dos decimales y sin errores de punto flotante; `validarVenta` (cliente existente, al menos un renglón, cantidades válidas); `construirVenta` con identificador, fecha ISO 8601, **copia** de los datos del cliente y renglones con copia de `titulo`, `isbn` y `precioUnitario` (DD-08).

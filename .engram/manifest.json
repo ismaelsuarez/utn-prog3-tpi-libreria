@@ -32,6 +32,30 @@
       "sessions": 1,
       "memories": 5,
       "prompts": 0
+    },
+    {
+      "id": "5ddaa6c1",
+      "created_by": "project",
+      "created_at": "2026-10-17T00:53:35.300984297Z",
+      "sessions": 4,
+      "memories": 53,
+      "prompts": 19
+    },
+    {
+      "id": "717a7948",
+      "created_by": "project",
+      "created_at": "2026-10-17T00:54:16.810235629Z",
+      "sessions": 1,
+      "memories": 1,
+      "prompts": 0
+    },
+    {
+      "id": "ef4f8746",
+      "created_by": "project",
+      "created_at": "2026-10-17T00:54:31.898134191Z",
+      "sessions": 0,
+      "memories": 0,
+      "prompts": 0
     }
   ]
 }
