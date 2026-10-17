@@ -20,6 +20,7 @@ no hay servidor, base de datos ni API.
 
 No requiere npm, instalación de dependencias, servidor ni conexión a Internet.
 Solo usa HTML, CSS y JavaScript nativos, sin librerías, frameworks ni CDNs.
+El proyecto se abre directamente desde `file://`.
 
 ## Navegación entre vistas
 
@@ -34,33 +35,31 @@ vistas e indica cuál es la vista actual.
 | Ventas | `ventas.html` | Selección de cliente, renglones y resumen |
 | Historial | `historial.html` | Tabla de ventas y detalle de una venta |
 
-## Estado del avance (Ejercicios 1 a 5)
-
-Las cinco vistas funcionan con datos del almacén. Los ejemplos iniciales están
-en `js/datos/datos-iniciales.js`; las altas de libros y clientes y las ventas
-se conservan en el navegador. C-06 mantiene pendiente la consolidación del
-almacenamiento, la verificación general y la preparación de la entrega.
-
-### Interacciones que ya funcionan
+## Funcionalidades implementadas
 
 - Navegación entre las cinco vistas.
-- **Catálogo generado desde los datos**: al abrir `index.html` las tarjetas se
-  arman desde el almacén de datos (editorial, género y autores se resuelven por
-  identificador y un libro sin género muestra «Sin clasificar»).
+- **Carga inicial consolidada**: al abrir cualquier vista, el almacén siembra
+  los datos de ejemplo en las claves que falten (libros, clientes y ventas),
+  sin duplicar ni sobrescribir lo ya guardado.
+- **Catálogo generado desde los datos**: las tarjetas se arman desde el
+  almacén (editorial, género y autores se resuelven por identificador y un
+  libro sin género muestra «Sin clasificar»).
 - **Filtro por título del Catálogo**: no distingue mayúsculas de minúsculas,
   admite coincidencias parciales e ignora los espacios de los extremos. Una
   búsqueda vacía muestra todos los libros y una búsqueda sin coincidencias
   muestra un mensaje.
-
 - **Altas de libros y clientes**: validación y actualización del listado en la
-  misma página. Las otras vistas leen los datos vigentes al abrirse; navegar
-  entre páginas no es una actualización automática de pestañas ya abiertas.
+  misma página.
 - **Ventas**: seleccionar cliente, libro y cantidad entera positiva. Agregar
   otra vez el mismo libro suma cantidades sin duplicar filas. Antes de
   confirmar se pueden cambiar cantidades o quitar renglones.
 - **Historial**: listado de ventas y detalle en la misma página, sin edición
   ni eliminación. La fecha se muestra como `dd/mm/aaaa HH:mm`, hora local del
   navegador; se almacena en formato ISO.
+
+Nota sobre «sin recargar»: cuando el proyecto dice que un listado se
+actualiza «sin recargar», significa dentro de la misma página donde ocurre la
+alta u operación. Navegar hacia otra vista sí vuelve a leer el almacén.
 
 ### Importes y confirmación de ventas
 
@@ -77,7 +76,14 @@ No se gestionan stock, cobros ni facturación fiscal.
 
 ### Almacenamiento y límites
 
-Solo `js/almacen.js` accede a `localStorage`. Las claves son:
+Los datos de ejemplo viven en `js/datos/datos-iniciales.js` (seis libros,
+tres clientes, editoriales, géneros y autores). Editoriales, géneros y
+autores **no se persisten**: se leen siempre de ese archivo; en
+`localStorage` solo se guardan libros, clientes y ventas.
+
+Solo `js/almacen.js` accede a `localStorage`. Al abrir cualquier página,
+`Libreria.almacen.inicializar()` siembra únicamente las claves ausentes; las
+claves presentes se respetan sin duplicarlas. Las claves son:
 
 | Clave | Contenido |
 |---|---|
@@ -91,46 +97,91 @@ ilegible o el navegador bloquea su acceso, se informa el fallo sin reemplazar
 los datos; no se presenta una reserva temporal como guardado persistente.
 Las pruebas de Node sin almacenamiento sí usan una reserva en memoria.
 
-Los datos dependen del navegador, perfil y ubicación desde la que se abre el
-proyecto; no se comparten entre personas ni se respaldan en un servidor.
-No borrar datos del navegador si se desea conservarlos. La política general
-para claves parciales o dañadas de libros/clientes queda para C-06.
+`localStorage` depende del navegador, del perfil y de la ubicación desde la
+que se abre el proyecto: los datos no se comparten entre personas ni entre
+perfiles, no se respaldan en un servidor y desaparecen si el navegador borra
+los datos del sitio. No se gestionan sincronización entre pestañas abiertas
+ni migración de datos guardados con versiones anteriores.
 
-### Verificación observada de C-05
+### Política de claves dañadas
+
+Si el contenido de una clave no es un arreglo JSON válido (por ejemplo, fue
+alterado a mano), la aplicación **no lo repara ni lo sobrescribe**: el valor
+alterado se conserva intacto y las lecturas sirven los ejemplos provisorios
+en memoria (en el caso de ventas ilegibles, la consulta informa el fallo).
+La única vía de recuperación es un alta posterior: al registrar un libro, un
+cliente o una venta, la lista completa de esa clave se reemplaza por
+ejemplos + registro nuevo.
+
+### Ubicación y estructura del catálogo guardado
+
+En el navegador: Herramientas de desarrollo → Application (o Almacenamiento)
+→ Local Storage → el origen `file://` → claves `libreria.libros`,
+`libreria.clientes` y `libreria.ventas`. Cada clave contiene un arreglo JSON.
+Un libro guardado tiene esta forma:
+
+```json
+{
+  "id": "lib-01",
+  "titulo": "El faro de los vientos",
+  "isbn": "978-987-000-001-1",
+  "precio": 1500,
+  "editorialId": "edi-01",
+  "generoId": "gen-01",
+  "autorIds": ["aut-01"]
+}
+```
+
+Para reproducir CM-6 en una copia de prueba: registrar una venta, editar en
+DevTools **solo** el campo `precio` del libro correspondiente dentro de
+`libreria.libros` (mantener los demás campos y no editar `libreria.ventas`),
+recargar Historial y comparar precio unitario, subtotales y total con los
+valores confirmados: deben conservarse intactos.
+
+### Imágenes
+
+- `img/estanteria.webp` es una imagen descargada de la red que se conserva
+  como recurso local del proyecto.
+- `index.html` referencia siete `img/portadas/*.jpg` que no existen en la
+  entrega (seis portadas de ejemplo y una predeterminada para la plantilla).
+  Cada tarjeta oculta la imagen rota con `onerror` y muestra un bloque
+  decorativo con el texto «Portada no disponible»: la página no se rompe ni
+  aparecen íconos de imagen defectuosa.
+
+## Casos manuales: resultado observado
+
+Verificación del 2026-10-16 con Edge 155 real en modo headless, mediante CDP
+(Chrome DevTools Protocol), sobre una copia del proyecto y perfiles aislados
+abiertos con `file://`, sin servidor ni dependencias instaladas. Esto no
+equivale a una auditoría completa con lector de pantalla ni reemplaza una
+pasada visual en el navegador habitual de cada integrante.
+
+| Caso | Resultado observado |
+|---|---|
+| CM-1 | Aprobado: `FARO` → 1 tarjeta; `   faro   ` → 1 tarjeta; búsqueda vacía → catálogo completo (6); `zzzz` → 0 tarjetas con mensaje «sin resultados» |
+| CM-2 | Aprobado: ISBN duplicado rechazado con «Ese ISBN ya está registrado.» sin dar de alta; libro nuevo registrado sin recargar (7 filas) y visible en Catálogo y en la selección de venta |
+| CM-3 | Aprobado: email inválido y existente en mayúsculas rechazados; cliente nuevo registrado sin recargar (4 filas) y visible en la selección de venta |
+| CM-4 | Aprobado: venta sin cliente no se confirma y conserva el borrador; cantidades 0, −2 y 1,5 rechazadas («entero positivo seguro»); libro repetido acumula en la misma fila (2 + 1 → cantidad 3) |
+| CM-5 | Aprobado: 2 × $ 1500,00 → $ 3000,00 y 1 × $ 2000,00 → $ 2000,00; total $ 5000,00; venta `ven-01` guardada y detalle correcto en el Historial |
+| CM-6 | Aprobado: alterado el precio de `lib-01` en el catálogo guardado (1500 → 9999), la venta confirmada conserva unitarios $ 1500,00 / $ 2000,00, subtotales $ 3000,00 / $ 2000,00 y total $ 5000,00 tras recargar |
+| CM-7 | Aprobado: tras altas de libro (`lib-07`) y cliente (`cli-04`) y una venta, recorrer las cinco vistas recupera libros 7 / clientes 4 / ventas 1 sin duplicar ejemplos ni ventas, con 0 errores de consola |
+| CM-8 | Aprobado: las cinco vistas a 320 px y 1280 px sin desplazamiento horizontal de página (`scrollWidth == clientWidth`); Tab recorre todos los controles (Catálogo 6, Libros 15/14, Clientes 8, Ventas 11, Historial 5) con foco visible en el 100 %; las tablas desplazan su propio contenedor con la flecha cuando exceden el ancho |
+
+La tarea 6.3 trasladada desde C-04 (Libros y Clientes a 320 px y 1280 px, con
+teclado y foco visible) quedó cubierta dentro del recorrido de CM-8 y también
+aprobada.
+
+También se observó el redondeo de `1500,125` a `1500,13`, la conservación del
+borrador ante escritura rechazada, el reintento sin duplicados y el texto
+con etiquetas HTML mostrado literalmente (verificación de C-05, abajo).
+
+## Verificación observada de C-05 (histórica)
 
 El 2026-10-16 se ejecutaron recorridos automatizados en Chrome 155 real,
 mediante CDP, sobre copias del proyecto y perfiles aislados abiertos con
-`file://`. Se inspeccionaron capturas a 320 px y 1280 px y se utilizaron
-eventos de teclado. Esto no equivale a una auditoría completa con lector de
-pantalla ni reemplaza la verificación final de C-06.
-
-| Caso | Resultado observado en esta etapa |
-|---|---|
-| CM-1 | No reevaluado en C-05; queda para la verificación general |
-| CM-2 | Parcial: alta válida desde formulario y disponibilidad para vender. No se volvió a comprobar el ISBN duplicado ni la aparición en Catálogo |
-| CM-3 | Parcial: alta válida desde formulario y disponibilidad para vender. No se repitieron email inválido/duplicado ni se verificó todo el listado |
-| CM-4 | Aprobado: rechazo de venta sin cliente y cantidades vacías, cero, negativas o decimales; repetidos acumulados en una fila. Editar una cantidad inválida bloquea la confirmación hasta corregirla o quitarla |
-| CM-5 | Aprobado: subtotales 3000 y 2000, total 5000, guardado y detalle histórico correctos |
-| CM-6 | Aprobado en copia: modificar exclusivamente el precio del catálogo y recargar no cambió los importes de la venta confirmada |
-| CM-7 | Parcial: las altas llegaron a Ventas y dos ventas conservaron sus identificadores al recargar, sin duplicarse. No se comprobó toda la carga inicial ni la recuperación de claves parciales |
-| CM-8 | Parcial general: Ventas e Historial comprobados a 320/1280 px, con teclado y foco visible, sin desbordamiento de página. Las tablas se desplazan dentro de sus contenedores. Sigue pendiente la comprobación de Libros/Clientes trasladada desde C-04 |
-
-También se comprobó el redondeo de `1500,125` a `1500,13`, la conservación del
-borrador ante escritura rechazada, el reintento sin duplicados, el cambio
-correcto de día UTC/local y el reemplazo de detalles de dos ventas sin mezclar
-filas. El texto con etiquetas HTML se mostró literalmente.
-
-Para repetir CM-6, usar una copia y un perfil de prueba, registrar una venta
-y conservar sus importes. En las herramientas de desarrollo, editar solo
-`precio` del libro correspondiente dentro del JSON de `libreria.libros`;
-mantener los demás campos y no editar `libreria.ventas`. Recargar Historial y
-comparar precio unitario, subtotales y total con los valores confirmados.
-
-### Pendiente
-
-- Consolidación de carga inicial y recuperación de almacenamiento (C-06).
-- Verificación general de CM-1 a CM-8 y pendientes indicados en la tabla.
-- Documentación final y armado de la entrega (Ejercicio 6).
+`file://`. Los resultados detallados de esa etapa quedan registrados en el
+change archivado `venta-simulada-e-historial`; la tabla de CM-1 a CM-8 de la
+sección anterior es la verificación vigente y completa.
 
 ## Para quienes desarrollan
 
@@ -140,9 +191,11 @@ Pruebas de lógica y almacén, sin instalar dependencias:
 node --test tests/*.test.js
 ```
 
-Resultado al integrar C-05: **146 pruebas aprobadas, 0 fallidas**; baseline
-previo: 70 aprobadas. Estas pruebas no sustituyen los recorridos de navegador.
-La carpeta `tests/` se excluye de la entrega.
+Resultado al integrar C-06: **153 pruebas aprobadas, 0 fallidas**; baseline
+previo a C-06: 146 aprobadas. En Windows el runner correcto es
+`node --test tests/*.test.js` (no `node --test tests/`). Estas pruebas no
+sustituyen los recorridos de navegador. La carpeta `tests/` se excluye de la
+entrega.
 
 Después de clonar el repositorio, ejecutar una sola vez:
 
@@ -162,5 +215,15 @@ usa y se edita igual. Detalle en `AGENTS.md`.
 index.html, libros.html, clientes.html, ventas.html, historial.html
 css/        hojas de estilo (base, disposición y componentes)
 js/         scripts; js/paginas/ tiene un script por vista
+img/        imágenes locales (estanteria.webp y el subdirectorio portadas/)
 recursos/   tipografías e imágenes locales
+README.md
 ```
+
+## Entrega
+
+La entrega incluye únicamente: `index.html`, los demás `*.html`, `css/`,
+`js/`, `img/`, `recursos/` y `README.md`. No forman parte de la entrega
+`tests/`, `docs/`, `discovery/`, `knowledge-base/`, `openspec/`, `.atl/`,
+`.claude/`, `.engram/`, `.githooks/`, `.git/`, `.gitignore`, `CHANGES.md`,
+`AGENTS.md`, `CLAUDE.md` ni `.active-orchestrator-state.json`.

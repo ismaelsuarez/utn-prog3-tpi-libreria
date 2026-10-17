@@ -263,7 +263,7 @@ Notas: el paso 3 es el cuello de botella real (C-04 y C-05 usan el almacén de C
 ## FASE 3 — Cierre, verificación y entrega
 
 ### [C-06] `persistencia-verificacion-y-documentacion`
-- **Estado**: `[ ]` pendiente
+- **Estado**: `[x]` archivado el 2026-10-16 (`openspec/changes/archive/2026-10-16-persistencia-verificacion-y-documentacion/`)
 - **Scope**:
   - Trazabilidad: **Ejercicio 6, 10 puntos** (persistencia 4; pruebas manuales registradas 3; documentación y entrega 3). US-015, US-016 y US-017. Reglas: RN-PE-01 a RN-PE-03, RN-GL-06 a RN-GL-08.
   - `js/almacen.js`: carga inicial **consolidada**. Primer inicio carga los ejemplos; los siguientes recuperan lo guardado sin duplicar ejemplos ni ventas. Cerrar PA-04 (cómo distinguir primer inicio de un almacenamiento con una clave presente y otra ausente) y PA-05 (contenido ilegible o alterado a mano, caso que el docente provoca en CM-6) y confirmar SU-05 y SU-06.

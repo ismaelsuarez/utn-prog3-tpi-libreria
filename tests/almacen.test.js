@@ -148,6 +148,154 @@ test("un contenido ilegible devuelve los ejemplos sin sobrescribirlo", () => {
   }
 });
 
+// --- Inicialización del primer inicio (C-06, persistencia-verificacion-y-documentacion) ---
+
+test("inicializar siembra las tres claves en el primer inicio", () => {
+  const storage = crearStorage({});
+  const aislado = cargarAlmacenEnNavegador({ localStorage: storage });
+
+  aislado.inicializar();
+
+  assert.deepEqual(JSON.parse(storage.contenido["libreria.libros"]), datos.libros);
+  assert.deepEqual(JSON.parse(storage.contenido["libreria.clientes"]), datos.clientes);
+  assert.equal(storage.contenido["libreria.ventas"], "[]");
+  assert.deepEqual(storage.escrituras, ["libreria.libros", "libreria.clientes", "libreria.ventas"]);
+
+  // Triangulación: las lecturas posteriores devuelven los ejemplos y [].
+  assert.equal(aislado.obtenerLibros().length, datos.libros.length);
+  assert.equal(aislado.obtenerLibros()[0].titulo, datos.libros[0].titulo);
+  assert.equal(aislado.obtenerClientes().length, datos.clientes.length);
+  assert.equal(aislado.obtenerClientes()[0].email, datos.clientes[0].email);
+  assert.equal(aislado.obtenerVentas().length, 0);
+});
+
+test("inicializar en un segundo inicio respeta las claves sembradas y no escribe", () => {
+  const storage = crearStorage({});
+  const primera = cargarAlmacenEnNavegador({ localStorage: storage });
+  primera.inicializar();
+  const libros = storage.contenido["libreria.libros"];
+  const clientes = storage.contenido["libreria.clientes"];
+  const ventas = storage.contenido["libreria.ventas"];
+  storage.escrituras.length = 0;
+
+  // Segunda página abierta: contexto aislado, storage ya sembrado.
+  const segunda = cargarAlmacenEnNavegador({ localStorage: storage });
+  segunda.inicializar();
+
+  // Triangulación: releyendo no se escribe nada ni se duplican datos.
+  assert.deepEqual(storage.escrituras, [], "el segundo inicio no debe escribir");
+  assert.equal(storage.contenido["libreria.libros"], libros);
+  assert.equal(storage.contenido["libreria.clientes"], clientes);
+  assert.equal(storage.contenido["libreria.ventas"], ventas);
+  assert.equal(segunda.obtenerLibros().length, datos.libros.length, "sin duplicar ejemplos");
+  assert.equal(segunda.obtenerClientes().length, datos.clientes.length, "sin duplicar ejemplos");
+  assert.equal(segunda.obtenerVentas().length, 0, "sin duplicar ventas");
+});
+
+test("inicializar con una clave parcial siembra solo las ausentes", () => {
+  const librosPropios = [{ id: "lib-77", titulo: "Único libro guardado", isbn: "978-987-000-077-6", precio: 999, editorialId: "edi-01", generoId: null, autorIds: ["aut-01"] }];
+  const clientesPropios = [{ id: "cli-77", nombreCompleto: "Único cliente guardado", email: "unico@correo.test" }];
+  const ventasPropias = [Object.assign(crearVenta(), { id: "ven-77" })];
+  const presentes = {
+    "libreria.libros": JSON.stringify(librosPropios),
+    "libreria.clientes": JSON.stringify(clientesPropios),
+    "libreria.ventas": JSON.stringify(ventasPropias)
+  };
+  const claves = ["libreria.libros", "libreria.clientes", "libreria.ventas"];
+
+  // Triangulación: cada clave ausente por turno.
+  claves.forEach((claveAusente) => {
+    const contenidoInicial = {};
+    claves.forEach((clave) => {
+      if (clave !== claveAusente) {
+        contenidoInicial[clave] = presentes[clave];
+      }
+    });
+    const escriturasEsperadas = [claveAusente];
+    const storage = crearStorage(contenidoInicial);
+    const aislado = cargarAlmacenEnNavegador({ localStorage: storage });
+
+    aislado.inicializar();
+
+    assert.deepEqual(storage.escrituras, escriturasEsperadas, `solo debe sembrar ${claveAusente}`);
+    claves.forEach((clave) => {
+      if (clave !== claveAusente) {
+        assert.equal(storage.contenido[clave], presentes[clave], `${clave} debe conservar su contenido`);
+      }
+    });
+  });
+});
+
+test("inicializar conserva el JSON ilegible y la lectura sirve los ejemplos provisorios", () => {
+  const ilegibles = ["{esto no es un arreglo json", JSON.stringify({ forma: "objeto, no arreglo" }), JSON.stringify(null)];
+  ilegibles.forEach((crudo) => {
+    const storage = crearStorage({ "libreria.libros": crudo, "libreria.clientes": crudo, "libreria.ventas": crudo });
+    const aislado = cargarAlmacenEnNavegador({ localStorage: storage });
+
+    aislado.inicializar();
+
+    assert.equal(storage.contenido["libreria.libros"], crudo, `conserva ${crudo}`);
+    assert.equal(storage.contenido["libreria.clientes"], crudo);
+    assert.equal(storage.contenido["libreria.ventas"], crudo);
+    assert.deepEqual(storage.escrituras, [], "no se repara ni se sobrescribe");
+    assert.equal(aislado.obtenerLibros().length, datos.libros.length, "lectura provisoria de ejemplos");
+    assert.equal(aislado.obtenerClientes().length, datos.clientes.length, "lectura provisoria de ejemplos");
+  });
+});
+
+test("tras una clave ilegible, un alta posterior pisa la lista completa", () => {
+  const storage = crearStorage({ "libreria.libros": "{esto no es un arreglo json" });
+  const aislado = cargarAlmacenEnNavegador({ localStorage: storage });
+
+  aislado.inicializar();
+  const guardado = aislado.agregarLibro({
+    titulo: "Libro de recuperación",
+    isbn: "978-987-000-099-9",
+    precio: 100,
+    editorialId: "edi-01",
+    generoId: null,
+    autorIds: []
+  });
+
+  const lista = JSON.parse(storage.contenido["libreria.libros"]);
+  assert.equal(lista.length, datos.libros.length + 1, "ejemplos más el registro nuevo: la lista completa");
+  assert.equal(lista[lista.length - 1].id, guardado.id);
+  assert.equal(aislado.obtenerLibros().some((libro) => libro.id === guardado.id), true);
+});
+
+test("un fallo de escritura en la siembra no interrumpe la carga", () => {
+  const storage = crearStorage({});
+  storage.setItem = () => { throw new Error("Cuota de almacenamiento agotada"); };
+  const aislado = cargarAlmacenEnNavegador({ localStorage: storage });
+
+  aislado.inicializar();
+
+  assert.deepEqual(storage.escrituras, [], "la siembra rechazada no debe quedar registrada");
+  assert.equal(aislado.obtenerLibros().length, datos.libros.length, "la lectura sigue respondiendo en la sesión");
+  assert.equal(aislado.obtenerClientes().length, datos.clientes.length);
+  assert.equal(aislado.obtenerVentas().length, 0);
+});
+
+test("el fallo de escritura de una clave no afecta a las otras dos", () => {
+  const storage = crearStorage({});
+  const escribir = storage.setItem.bind(storage);
+  storage.setItem = function (clave, valor) {
+    if (clave === "libreria.ventas") {
+      throw new Error("Cuota de almacenamiento agotada");
+    }
+    escribir(clave, valor);
+  };
+  const aislado = cargarAlmacenEnNavegador({ localStorage: storage });
+
+  aislado.inicializar();
+
+  assert.equal(storage.contenido["libreria.libros"], JSON.stringify(datos.libros));
+  assert.equal(storage.contenido["libreria.clientes"], JSON.stringify(datos.clientes));
+  assert.equal(storage.contenido["libreria.ventas"], undefined, "la clave rechazada no llega al storage");
+  assert.deepEqual(storage.escrituras, ["libreria.libros", "libreria.clientes"]);
+  assert.equal(aislado.obtenerVentas().length, 0, "ventas sigue respondiendo en la sesión");
+});
+
 // --- Altas: van al final del archivo porque modifican el estado compartido ---
 
 test("agregarLibro da de alta sobre los ejemplos, asigna lib-07 y devuelve el registro", () => {

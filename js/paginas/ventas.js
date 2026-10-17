@@ -1,6 +1,7 @@
 (function () {
   "use strict";
 
+  Libreria.almacen.inicializar();
   const almacen = Libreria.almacen;
   const logica = Libreria.ventas;
   const interfaz = Libreria.interfaz;

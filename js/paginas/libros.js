@@ -4,6 +4,7 @@
 (function () {
   "use strict";
 
+  window.Libreria.almacen.inicializar();
   const almacen = window.Libreria.almacen;
   const interfaz = window.Libreria.interfaz;
   const catalogo = window.Libreria.catalogo;

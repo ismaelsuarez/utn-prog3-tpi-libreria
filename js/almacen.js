@@ -1,13 +1,21 @@
 (function (raiz) {
   "use strict";
 
+  // Inicialización:
+  //   inicializar()          - siembra únicamente las claves ausentes en el
+  //                            primer inicio: libros y clientes con sus datos
+  //                            de ejemplo y ventas con una lista vacía. Las
+  //                            claves presentes se respetan (C-06,
+  //                            persistencia-verificacion-y-documentacion).
   // Escritura:
   //   agregarLibro(libro)    - registra un libro (C-04, alta-de-libros-y-clientes).
   //   agregarCliente(cliente)- registra un cliente (C-04, alta-de-libros-y-clientes).
   //   agregarVenta(venta)    - recibe una instantánea validada, asigna ven-XX y
   //                            devuelve una copia independiente de lo guardado.
   // Las ventas no validan reglas de negocio ni normalizan importes. Los fallos
-  // de almacenamiento se propagan; solo Node sin storage usa memoria. La UI
+  // de almacenamiento se propagan en las altas; solo Node sin storage usa
+  // memoria. La excepción es inicializar(): un fallo al escribir la siembra
+  // degrada a reserva en memoria sin interrumpir la carga de la página. La UI
   // debe conservar el borrador hasta que agregarVenta termine correctamente.
 
   const datos = (typeof module !== "undefined" && module.exports)
@@ -121,6 +129,21 @@
     memoria[clave] = lista;
   }
 
+  // True si la clave ya existe (arreglo válido o contenido ilegible intacto):
+  // en cualquiera de los dos casos la inicialización la respeta y no la toca.
+  function clavePresente(clave) {
+    const storage = obtenerStorage();
+    if (storage) {
+      try {
+        const crudo = storage.getItem(clave);
+        return crudo !== null && crudo !== undefined;
+      } catch (error) {
+        return true; // Lectura rechazada: se conserva todo tal como está.
+      }
+    }
+    return Object.prototype.hasOwnProperty.call(memoria, clave);
+  }
+
   // Esquema D1: prefijo + contador de al menos dos dígitos (lib-07, cli-04).
   function siguienteId(lista, prefijo) {
     let maximo = 0;
@@ -136,6 +159,28 @@
   }
 
   const api = {
+    // Siembra únicamente las claves ausentes en el primer inicio (RN-PE-02):
+    // libros y clientes con sus datos de ejemplo y ventas con una lista vacía.
+    // Las claves presentes se respetan —un arreglo válido no se duplica y un
+    // contenido ilegible se conserva intacto—; reejecutar es inocuo. Un fallo
+    // al escribir degrada a la reserva en memoria sin interrumpir la página.
+    inicializar: function () {
+      const semillas = [
+        { clave: CLAVE_LIBROS, ejemplos: datos.libros, copia: copiarLibro },
+        { clave: CLAVE_CLIENTES, ejemplos: datos.clientes, copia: copiarRegistro },
+        { clave: CLAVE_VENTAS, ejemplos: [], copia: copiarVenta }
+      ];
+      semillas.forEach(function (semilla) {
+        if (clavePresente(semilla.clave)) {
+          return;
+        }
+        try {
+          escribirLista(semilla.clave, semilla.ejemplos.map(semilla.copia));
+        } catch (error) {
+          memoria[semilla.clave] = semilla.ejemplos.map(semilla.copia);
+        }
+      });
+    },
     obtenerLibros: function () {
       return leerLista(CLAVE_LIBROS, datos.libros, copiarLibro);
     },
