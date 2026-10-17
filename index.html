@@ -18,7 +18,9 @@
   <script src="js/almacen.js" defer></script>
   <script src="js/interfaz.js" defer></script>
   <script src="js/paginas/catalogo.js" defer></script>
+  <script src="js/paginas/ficha-libros.js" defer></script>
   <link rel="stylesheet" href="css/vista-inmersiva.css">
+  <link rel="stylesheet" href="css/ficha-libros.css">
 </head>
 
 <body>
@@ -343,6 +345,43 @@
     <p>Trabajo Práctico Integrador · Programación III · UTN</p>
     <p>Avalos Pablo, Blangetti Sofia, Suarez Ismael. Los datos son ficticios.</p>
   </footer>
+  <!-- Ficha de lectura: no reemplaza al catálogo ni modifica sus datos. -->
+  <dialog id="ficha-libro" class="ficha-overlay" aria-labelledby="ficha-titulo" aria-describedby="ficha-sinopsis">
+    <div class="ficha-box">
+      <button type="button" class="ficha-close" id="cerrar-ficha" aria-label="Cerrar detalles">×</button>
+      <div class="ficha-inner">
+        <div class="ficha-aside">
+          <div class="ficha-portada" id="ficha-portada" aria-label="Portada ilustrativa del libro">
+            <small id="ficha-cubierta-editorial"></small>
+            <strong id="ficha-cubierta-titulo"></strong>
+            <span id="ficha-cubierta-autor"></span>
+            <img id="ficha-portada-imagen" alt="" hidden>
+          </div>
+          <p class="ficha-cubierta-hint" id="ficha-cubierta-hint">Cubierta ilustrativa de ejemplo</p>
+        </div>
+        <div class="ficha-content">
+          <p class="ficha-kicker">LIBRERÍA EL FARO / FICHA DE LECTURA</p>
+          <span class="ficha-category" id="ficha-genero"></span>
+          <h2 class="ficha-title" id="ficha-titulo"></h2>
+          <p class="ficha-author" id="ficha-autor"></p>
+          <div class="ficha-rule"></div>
+          <h3 class="ficha-desc-head">De qué trata este libro</h3>
+          <p class="ficha-synopsis" id="ficha-sinopsis"></p>
+          <p class="ficha-demo-warning" id="ficha-advertencia" hidden>Sinopsis ilustrativa de muestra, no información editorial verificada.</p>
+          <dl class="ficha-metadata">
+            <div><dt>Editorial</dt><dd id="ficha-editorial"></dd></div>
+            <div><dt>Género</dt><dd id="ficha-genero-texto"></dd></div>
+            <div class="ficha-metadata-isbn"><dt>ISBN</dt><dd id="ficha-isbn"></dd></div>
+          </dl>
+        </div>
+      </div>
+      <div class="ficha-bottom">
+        <div><div class="ficha-price-label">PRECIO DEL EJEMPLAR</div><div id="ficha-precio" class="ficha-price"></div></div>
+        <button id="volver-catalogo" type="button" class="ficha-back">← Volver al catálogo</button>
+      </div>
+    </div>
+  </dialog>
+
 </body>
 
 </html>
