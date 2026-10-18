@@ -10,10 +10,12 @@
     <link href="css/disposicion.css" rel="stylesheet" />
     <link href="css/componentes.css" rel="stylesheet" />
     <link rel="stylesheet" href="css/vista-inmersiva.css">
+    <link rel="stylesheet" href="css/ticket-venta.css">
     <script defer src="js/datos/datos-iniciales.js"></script>
     <script defer src="js/logica/ventas.js"></script>
     <script defer src="js/almacen.js"></script>
     <script defer src="js/interfaz.js"></script>
+    <script defer src="js/paginas/ticket-venta.js"></script>
     <script defer src="js/paginas/ventas.js"></script>
 </head>
 
@@ -121,6 +123,59 @@
                 </div>
             </section>
         </form>
+        <!-- El ticket se muestra solo después de guardar exitosamente una venta. -->
+        <dialog id="modal-comprobante" class="ticket-venta__dialogo" aria-labelledby="ticket-venta-titulo" aria-describedby="ticket-venta-descripcion">
+            <div class="ticket-venta__encabezado">
+                <div>
+                    <p class="ticket-venta__eyebrow">OPERACIÓN REGISTRADA</p>
+                    <h2 id="ticket-venta-titulo">Tu comprobante está listo</h2>
+                    <p id="ticket-venta-descripcion">La impresora de El Faro está preparando el ticket de la venta.</p>
+                </div>
+                <button type="button" id="ticket-venta-cerrar" class="ticket-venta__cerrar" aria-label="Cerrar comprobante">×</button>
+            </div>
+            <div class="ticket-venta__visor" id="ticket-venta-visor">
+                <div class="ticket-venta__escena" id="ticket-venta-escena" data-estado="reposo">
+                <div class="ticket-venta__impresora" aria-hidden="true">
+                    <div class="ticket-venta__superior"><span class="ticket-venta__emblema">✦</span><span class="ticket-venta__placa">LIBRERÍA EL FARO</span></div>
+                    <div class="ticket-venta__pantalla">
+                        <div class="ticket-venta__pantalla-cabecera"><span>MOSTRADOR · COMPROBANTE</span><span id="ticket-venta-indicador">EN ESPERA</span></div>
+                        <strong id="ticket-venta-estado">Preparando tu ticket…</strong>
+                        <small id="ticket-venta-detalle">Verificando el comprobante</small>
+                        <div class="ticket-venta__progreso" aria-hidden="true"><span></span></div>
+                    </div>
+                    <div class="ticket-venta__ranura"></div>
+                </div>
+                <div class="ticket-venta__papel-contenedor" id="ticket-venta-papel-contenedor">
+                    <div class="ticket-venta__papel-caja">
+                        <article class="ticket-venta__papel" id="ticket-venta-papel" aria-label="Comprobante interno de venta">
+                            <div class="ticket-venta__cabecera-papel"><span aria-hidden="true">✦</span><h3>LIBRERÍA EL FARO</h3><p>Historias para cada lector</p><strong>COMPROBANTE INTERNO · NO FISCAL</strong></div>
+                            <div class="ticket-venta__guiones" aria-hidden="true"></div>
+                            <dl class="ticket-venta__metadatos">
+                                <div><dt>OPERACIÓN</dt><dd id="ticket-venta-id">—</dd></div>
+                                <div><dt>FECHA</dt><dd id="ticket-venta-fecha">—</dd></div>
+                                <div><dt>CLIENTE</dt><dd id="ticket-venta-cliente">—</dd></div>
+                            </dl>
+                            <div class="ticket-venta__guiones" aria-hidden="true"></div>
+                            <div class="ticket-venta__columnas"><strong>DESCRIPCIÓN</strong><strong>IMPORTE</strong></div>
+                            <div id="ticket-venta-renglones" class="ticket-venta__renglones"></div>
+                            <div class="ticket-venta__guiones" aria-hidden="true"></div>
+                            <div class="ticket-venta__total"><strong>TOTAL</strong><strong id="ticket-venta-total">$ 0,00</strong></div>
+                            <div class="ticket-venta__codigo" aria-hidden="true"></div>
+                            <p class="ticket-venta__codigo-texto" id="ticket-venta-codigo">—</p>
+                            <p class="ticket-venta__gracias">¡Gracias por elegirnos!</p>
+                            <p class="ticket-venta__frase">Cada libro es una puerta a otro mundo.</p>
+                            <p class="ticket-venta__no-fiscal">No constituye una factura ni un comprobante fiscal.</p>
+                        </article>
+                    </div>
+                </div>
+            </div>
+            </div><!-- Fin del visor que ajusta el comprobante a la pantalla -->
+            <p class="ticket-venta__anuncio" id="ticket-venta-anuncio" role="status" aria-live="polite">El ticket saldrá de la impresora.</p>
+            <div class="ticket-venta__acciones">
+                <button type="button" class="boton boton--secundario" id="ticket-venta-repetir" disabled>Repetir animación</button>
+                <button type="button" class="boton boton--primario" id="ticket-venta-imprimir" disabled>Imprimir / Guardar PDF</button>
+            </div>
+        </dialog>
         <template id="plantilla-fila-renglon">
             <tr>
                 <th data-campo="libro" scope="row"></th>
@@ -142,6 +197,8 @@
         <p>Trabajo Práctico Integrador · Programación III · UTN</p>
         <p>Avalos Pablo, Blangetti Sofia, Suarez Ismael. Los datos son ficticios.</p>
     </footer>
+    <!-- Copia solo para impresión: evita que el modal o su animación oculten el papel en el PDF. -->
+    <div id="ticket-venta-impresion" class="ticket-venta__impresion" aria-hidden="true"></div>
 </body>
 
 </html>

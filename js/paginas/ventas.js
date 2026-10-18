@@ -10,6 +10,7 @@
   const libro = document.getElementById("venta-libro");
   const cantidad = document.getElementById("venta-cantidad");
   const agregar = document.getElementById("boton-agregar-renglon");
+  const confirmar = document.getElementById("boton-confirmar-venta");
   const filas = document.getElementById("filas-renglones");
   const plantilla = document.getElementById("plantilla-fila-renglon");
   const vacio = document.getElementById("renglones-vacio");
@@ -19,6 +20,8 @@
   const controles = { cliente, libro, cantidad };
   let renglones = [];
   let numeroFila = 0;
+  let confirmando = false;
+  let ultimaVentaConfirmada = null;
 
   function limpiarMensajes() {
     interfaz.ocultarMensaje(estado);
@@ -93,6 +96,33 @@
     });
   }
 
+  // Cuando se crea o edita un cliente en otra pestaña, actualizamos la lista
+  // sin perder la selección actual. Las ventas siempre validan por ID.
+  function actualizarSelectorClientes() {
+    const seleccionado = cliente.value;
+    const actuales = almacen.obtenerClientes();
+    const opcionInicial = document.createElement("option");
+    opcionInicial.value = "";
+    opcionInicial.textContent = "Elegir un cliente";
+    cliente.replaceChildren(opcionInicial);
+    llenarSelector(cliente, actuales, "nombreCompleto");
+    if (actuales.some(function (registro) { return registro.id === seleccionado; })) {
+      cliente.value = seleccionado;
+    }
+  }
+
+  cliente.addEventListener("focus", function () {
+    try { actualizarSelectorClientes(); } catch (error) { informarFallo(); }
+  });
+  window.addEventListener("pageshow", function () {
+    try { actualizarSelectorClientes(); } catch (error) { informarFallo(); }
+  });
+  window.addEventListener("storage", function (evento) {
+    if (evento.key === "libreria.clientes") {
+      try { actualizarSelectorClientes(); } catch (error) { informarFallo(); }
+    }
+  });
+
   agregar.addEventListener("click", function () {
     limpiarMensajes();
     if (hayEdicionInvalida()) return;
@@ -100,6 +130,7 @@
       const resultado = logica.agregarRenglon(renglones, libro.value, cantidad.value, almacen.obtenerLibros());
       if (resultado.errores.length) return mostrarErrores(resultado.errores);
       renderizar(resultado);
+      ultimaVentaConfirmada = null; // Inició o modificó una nueva operación.
       cantidad.value = "1";
       interfaz.mostrarMensaje(estado, "Renglón actualizado correctamente.");
     } catch (error) {
@@ -150,13 +181,33 @@
 
   formulario.addEventListener("submit", function (evento) {
     evento.preventDefault();
+    if (confirmando) return;
+
+    // Al finalizar una venta se limpia el borrador. Un segundo submit (doble
+    // clic/Enter) NO puede convertir el éxito anterior en «cliente inexistente».
+    if (ultimaVentaConfirmada && renglones.length === 0 && cliente.value === "") {
+      interfaz.ocultarMensaje(errorGeneral);
+      interfaz.mostrarMensaje(estado,
+        "Venta " + ultimaVentaConfirmada.id + " ya registrada correctamente. " +
+        "Podés consultarla en Historial. Para otra venta, elegí un cliente y agregá libros.");
+      return;
+    }
+
     limpiarMensajes();
     if (hayEdicionInvalida()) return;
+
+    let guardada;
+    confirmando = true;
+    confirmar.disabled = true;
     try {
       const libros = almacen.obtenerLibros();
       const clientes = almacen.obtenerClientes();
       const entradas = renglones.map(function (renglon) {
-        return { libroId: renglon.libroId, cantidad: filaDe(renglon.libroId).querySelector('[data-campo="cantidad"]').value };
+        const fila = filaDe(renglon.libroId);
+        return {
+          libroId: renglon.libroId,
+          cantidad: fila.querySelector('[data-campo="cantidad"]').value
+        };
       });
       const errores = logica.validarVenta(cliente.value, entradas, clientes, libros);
       if (errores.length) return mostrarErrores(errores);
@@ -165,18 +216,38 @@
       const elegida = clientes.find(function (registro) { return registro.id === cliente.value; });
       const resultado = logica.construirVenta(elegida, renglones, new Date().toISOString());
       if (resultado.errores.length) return mostrarErrores(resultado.errores);
-      const guardada = almacen.agregarVenta(resultado.venta);
-      formulario.reset();
-      renderizar({ renglones: [], total: 0 });
-      interfaz.mostrarMensaje(estado, "Venta " + guardada.id + " registrada correctamente.");
-      cliente.focus();
+      guardada = almacen.agregarVenta(resultado.venta);
     } catch (error) {
       informarFallo();
+      return;
+    } finally {
+      confirmando = false;
+      confirmar.disabled = false;
+    }
+
+    // Desde este punto la venta YA está guardada. Nada visual puede anularla.
+    ultimaVentaConfirmada = guardada;
+    try {
+      formulario.reset();
+      renderizar({ renglones: [], total: 0 });
+    } catch (errorVisual) {
+      interfaz.mostrarMensaje(estado,
+        "Venta " + guardada.id + " registrada correctamente en Historial.");
+      return;
+    }
+    interfaz.mostrarMensaje(estado,
+      "Venta " + guardada.id + " registrada correctamente. El comprobante está disponible.");
+    try {
+      Libreria.comprobante.mostrar(guardada);
+    } catch (errorTicket) {
+      interfaz.mostrarMensaje(estado,
+        "Venta " + guardada.id + " registrada correctamente. No se pudo mostrar " +
+        "el ticket, pero la venta sigue disponible en Historial.");
     }
   });
 
   try {
-    llenarSelector(cliente, almacen.obtenerClientes(), "nombreCompleto");
+    actualizarSelectorClientes();
     llenarSelector(libro, almacen.obtenerLibros(), "titulo");
   } catch (error) {
     informarFallo();

@@ -1,0 +1,198 @@
+/* LIBRERÍA EL FARO · Comprobante tras confirmar venta. CSS exclusivo. */
+.ticket-venta__dialogo {
+  position: fixed; max-width: min(660px, calc(100vw - 24px)); width: 100%;
+  max-height: min(92vh, 1000px); padding: 0; margin: auto;
+  border: 1px solid #bda37c; border-radius: 18px; color: #173e35;
+  background: #fffcf4; box-shadow: 0 25px 85px #081c17aa;
+  overflow: auto; overscroll-behavior: contain;
+}
+.ticket-venta__dialogo::backdrop { background: rgba(7, 21, 17, .75); backdrop-filter: blur(5px); }
+.ticket-venta__encabezado {
+  padding: 19px 23px 15px; display: flex; align-items: start; justify-content: space-between;
+  gap: 14px; border-bottom: 1px solid #e0d7c5; background: #fffcf4;
+}
+.ticket-venta__eyebrow { font-size: .7rem; font-weight: 800; letter-spacing: .13em; color: #a87534; margin: 0 0 5px; }
+.ticket-venta__encabezado h2 { font: 700 clamp(1.4rem, 3vw, 1.85rem)/1.16 Georgia,serif; color: #1f4b3d; margin: 0 0 7px; }
+.ticket-venta__encabezado p:not(.ticket-venta__eyebrow) { font-size: .87rem; color: #667568; line-height: 1.4; }
+.ticket-venta__cerrar { flex-shrink: 0; width: 38px; height: 38px; border-radius: 50%; border: 1px solid #d4c8b3;
+  background: #faf5e9; color: #285346; font-size: 1.65rem; cursor: pointer; line-height: 1; }
+.ticket-venta__cerrar:hover { background: #f0e4cb; border-color: #b78b4a; }
+.ticket-venta__escena { background: radial-gradient(ellipse at 50% 24%, #366451 0%, #1c4135 56%, #142e28 100%);
+  padding: 28px 14px 23px; display: flex; align-items: center; flex-direction: column; overflow: hidden; isolation: isolate;
+}
+.ticket-venta__impresora { position: relative; z-index: 2; width: min(370px, 100%); height: 181px; padding: 14px 17px 28px;
+  background: linear-gradient(148deg,#606661,#3b4340 28%,#2a312d 77%,#555b54);
+  border: 1px solid #8993889e; border-radius: 25px 25px 18px 18px;
+  box-shadow: inset 0 2px 1px #faf4dc44,inset 0 -8px 15px #10181480,0 18px 27px #091a15aa;
+}
+.ticket-venta__superior { display: flex; justify-content: space-between; align-items: center; padding: 0 4px 4px; }
+.ticket-venta__emblema { font: 32px Georgia,serif; color: #f1d19f; }
+.ticket-venta__placa { background: #59625a; color: #f0e9d8; border-radius: 18px; padding: 7px 12px;
+  border: 1px solid #aeb1a052; font-size: 10px; font-weight: 800; letter-spacing: .06em; }
+.ticket-venta__pantalla { background: #202925; border: 1px solid #101915; border-radius: 12px; padding: 10px 14px;
+  box-shadow: inset 0 2px 7px #07120fa0; min-height: 99px; }
+.ticket-venta__pantalla-cabecera { display: flex; justify-content: space-between; gap: 8px; align-items: center;
+  color: #a9bbae; font: 700 9px/1.2 system-ui,sans-serif; letter-spacing: .08em; }
+#ticket-venta-indicador { white-space: nowrap; color: #e8c987; }
+#ticket-venta-indicador::before { content: "●"; color: #e8c987; margin-right: 4px; }
+#ticket-venta-estado { display:block; margin: 8px 0 3px; color: #fff7e8; font-size: 1rem; line-height: 1.2; }
+#ticket-venta-detalle { display:block; color: #bdc9c0; font-size: .69rem; }
+.ticket-venta__progreso { height: 5px; margin-top: 9px; background: #0d1712; border-radius: 6px; overflow: hidden; }
+.ticket-venta__progreso span { display:block; width: 0; height: 100%; border-radius: 6px;
+  background:linear-gradient(90deg,#ad8347,#f1d69b); transition: width .4s linear; }
+.ticket-venta__escena[data-estado="procesando"] .ticket-venta__progreso span { width: 23%; }
+.ticket-venta__escena[data-estado="imprimiendo"] .ticket-venta__progreso span { width: 94%; transition:width 3s linear; }
+.ticket-venta__escena[data-estado="listo"] .ticket-venta__progreso span { width: 100%; }
+.ticket-venta__ranura { position: absolute; bottom: 12px; left: 10%; right: 10%; height: 14px;
+  border-radius: 9px; background: linear-gradient(#080e0a,#101713 74%,#62665d); z-index: 4;
+  box-shadow: inset 0 2px 4px #080e0e, 0 1px 1px #f9f0cc4a; }
+.ticket-venta__papel-contenedor { width: min(282px, 78%); margin-top: -2px; display: grid; grid-template-rows: 0fr;
+  overflow: hidden; z-index: 1; transition: grid-template-rows 2.85s cubic-bezier(.32,.08,.35,1); }
+.ticket-venta__papel-caja { overflow:hidden; min-height:0; }
+.ticket-venta__escena[data-estado="imprimiendo"] .ticket-venta__papel-contenedor,
+.ticket-venta__escena[data-estado="listo"] .ticket-venta__papel-contenedor { grid-template-rows: 1fr; }
+.ticket-venta__papel { padding: 19px 17px 28px; background:repeating-linear-gradient(0deg,#a6937410 0 1px,transparent 1px 7px), #fffaf0;
+  color: #252e26; box-shadow: 0 12px 21px #0b221aa0; font: 10px/1.45 "Courier New",monospace;
+  clip-path: polygon(0 0,100% 0,100% calc(100% - 7px),97% 100%,94% calc(100% - 7px),91% 100%,88% calc(100% - 7px),85% 100%,82% calc(100% - 7px),79% 100%,76% calc(100% - 7px),73% 100%,70% calc(100% - 7px),67% 100%,64% calc(100% - 7px),61% 100%,58% calc(100% - 7px),55% 100%,52% calc(100% - 7px),49% 100%,46% calc(100% - 7px),43% 100%,40% calc(100% - 7px),37% 100%,34% calc(100% - 7px),31% 100%,28% calc(100% - 7px),25% 100%,22% calc(100% - 7px),19% 100%,16% calc(100% - 7px),13% 100%,10% calc(100% - 7px),7% 100%,4% calc(100% - 7px),0 100%);
+}
+.ticket-venta__cabecera-papel { text-align:center; }
+.ticket-venta__cabecera-papel>span { font: 24px Georgia,serif; color: #2b584a; }
+.ticket-venta__cabecera-papel h3 { color:#294e41; font: 700 17px/1.25 Georgia,serif; margin:2px 0; }
+.ticket-venta__cabecera-papel p { color:#637269; font-size: 9px; margin:0 0 9px; }
+.ticket-venta__cabecera-papel strong { font-size: 8px; letter-spacing:.04em; }
+.ticket-venta__guiones { border-top:1px dashed #aaa494; margin:12px 0; }
+.ticket-venta__metadatos { margin:0; }
+.ticket-venta__metadatos>div { display:flex; justify-content:space-between; gap:7px; padding:2px 0; }
+.ticket-venta__metadatos dt { color:#637167; font-weight:700; }
+.ticket-venta__metadatos dd { text-align:right; margin:0; overflow-wrap:anywhere; max-width:64%; }
+.ticket-venta__columnas { display:flex; justify-content:space-between; gap:10px; margin-bottom:7px; font-size: 9px; }
+.ticket-venta__item { padding: 4px 0; }
+.ticket-venta__item>strong { display:block; font-weight:800; overflow-wrap:anywhere; }
+.ticket-venta__item-detalle { display:flex; justify-content:space-between; gap:6px; color:#555d52; margin-left:8px; }
+.ticket-venta__total { display:flex; justify-content:space-between; align-items:baseline; gap:9px; }
+.ticket-venta__total strong:last-child { font-size:17px; white-space:nowrap; }
+.ticket-venta__codigo { width:90%;height:39px;margin:18px auto 0; background:repeating-linear-gradient(90deg,#293f30 0 2px,transparent 2px 4px,#293f30 4px 5px,transparent 5px 8px,#293f30 8px 12px,transparent 12px 15px); opacity:.9; }
+.ticket-venta__codigo-texto { text-align:center; font-size:9px; letter-spacing:.1em; color:#59635c; margin:3px 0 0; }
+.ticket-venta__gracias { text-align:center; font-weight:800; margin:14px 0 3px; }
+.ticket-venta__frase { text-align:center; font: italic 11px/1.3 Georgia,serif; color:#536659; margin:0; }
+.ticket-venta__no-fiscal { text-align:center; margin:9px 0 0; font-size:8px; color:#6c7165; }
+.ticket-venta__anuncio { text-align:center; margin:0; padding:12px 22px 0; color:#526f5c; font-size:.79rem; }
+.ticket-venta__acciones { display:flex; gap:10px; padding:15px 22px 21px;
+  position:sticky; bottom:0; z-index:6; background:#fffcf4;
+  border-top:1px solid #e5dccb; box-shadow:0 -7px 19px #11281d18; }
+.ticket-venta__acciones .boton { flex:1; white-space:normal; padding:10px; }
+@media(max-width:480px) {
+  .ticket-venta__dialogo { max-height:95dvh; max-width:calc(100vw - 16px); }
+  .ticket-venta__encabezado { padding:15px 14px 12px; }
+  .ticket-venta__encabezado h2 { font-size:1.38rem; }
+  .ticket-venta__escena { padding:21px 9px 16px; }
+  .ticket-venta__impresora { height:177px; padding:12px 13px 26px; }
+  .ticket-venta__pantalla { padding:10px 9px; }
+  .ticket-venta__papel-contenedor { width:80%; }
+  .ticket-venta__papel { padding:16px 12px 24px; font-size:9px; }
+  .ticket-venta__acciones { padding:12px 12px 15px; gap:8px; }
+  .ticket-venta__acciones .boton { font-size:.78rem; }
+}
+@media(prefers-reduced-motion:reduce) {
+  .ticket-venta__papel-contenedor, .ticket-venta__progreso span { transition:none!important; }
+}
+
+/* =========================================================
+   VISTA COMPLETA — evita scroll dentro de la ventana.
+   El escenario conserva su tamaño de diseño; JavaScript
+   calcula la escala disponible según alto/ancho del visor.
+   La impresión sigue usando una copia independiente al 100%.
+   ========================================================= */
+.ticket-venta__dialogo {
+  box-sizing: border-box;
+  width: min(710px, calc(100vw - 20px));
+  max-width: calc(100vw - 20px);
+  height: min(94dvh, 940px);
+  max-height: calc(100dvh - 12px);
+  overflow: hidden;
+  flex-direction: column;
+}
+.ticket-venta__dialogo[open] { display: flex; }
+.ticket-venta__encabezado {
+  flex: 0 0 auto;
+  padding: 11px 17px 9px;
+}
+.ticket-venta__encabezado h2 { font-size: clamp(1.15rem, 2.5vw, 1.6rem); margin: 0 0 2px; }
+.ticket-venta__encabezado p:not(.ticket-venta__eyebrow) { margin: 0; font-size: .76rem; }
+.ticket-venta__eyebrow { margin: 0 0 3px; }
+.ticket-venta__cerrar { width: 35px; height: 35px; }
+.ticket-venta__visor {
+  min-height: 0;
+  flex: 1 1 auto;
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  overflow: hidden;
+  background: radial-gradient(ellipse at 50% 24%, #366451 0%, #1c4135 56%, #142e28 100%);
+  padding: 0;
+}
+.ticket-venta__escena {
+  /* El escenario se mide sin escalar, luego se transforma entero. */
+  width: 440px;
+  min-width: 440px;
+  flex: 0 0 440px;
+  padding: 12px 13px 12px;
+  transform: scale(var(--escala-ticket, 1));
+  transform-origin: top center;
+  background: transparent;
+  overflow: visible;
+}
+.ticket-venta__impresora { height: 170px; padding-top: 11px; padding-bottom: 24px; }
+.ticket-venta__pantalla { min-height: 92px; }
+.ticket-venta__anuncio {
+  flex: 0 0 auto;
+  padding: 5px 12px;
+  margin: 0;
+  font-size: .71rem;
+  line-height: 1.25;
+}
+.ticket-venta__acciones {
+  flex: 0 0 auto;
+  position: static;
+  padding: 8px 12px 10px;
+  box-shadow: none;
+}
+.ticket-venta__acciones .boton { padding: 8px 7px; font-size: .84rem; }
+@media(max-width:480px) {
+  .ticket-venta__dialogo {
+    width: calc(100vw - 12px);
+    max-width: calc(100vw - 12px);
+    height: calc(100dvh - 12px);
+    max-height: calc(100dvh - 12px);
+  }
+  .ticket-venta__encabezado { padding: 8px 12px; }
+  .ticket-venta__encabezado h2 { font-size: 1.18rem; }
+  .ticket-venta__encabezado p:not(.ticket-venta__eyebrow) { font-size: .69rem; }
+  .ticket-venta__escena { width: 440px; min-width: 440px; flex-basis: 440px; padding: 12px 13px; }
+  .ticket-venta__papel-contenedor { width: min(282px, 78%); }
+  .ticket-venta__papel { padding: 19px 17px 28px; font-size: 10px; }
+  .ticket-venta__acciones { padding: 8px; gap: 7px; }
+  .ticket-venta__acciones .boton { font-size: .73rem; }
+  .ticket-venta__anuncio { padding: 4px 8px; font-size: .65rem; }
+}
+
+/* El duplicado permanece oculto en pantalla; existe únicamente para window.print(). */
+.ticket-venta__impresion { display:none; }
+@media print {
+  @page { size: A4; margin: 12mm; }
+  body { display:block!important; background:#fff!important; }
+  body > :not(#ticket-venta-impresion) { display:none!important; }
+  #ticket-venta-impresion { display:block!important; width:78mm!important; margin:0 auto!important; }
+  #modal-comprobante { position:static!important; display:none!important; width:100%!important; max-width:none!important;
+    max-height:none!important; margin:0!important; padding:0!important; border:0!important; box-shadow:none!important; overflow:visible!important; }
+  #modal-comprobante::backdrop { display:none!important; }
+  .ticket-venta__encabezado,.ticket-venta__impresora,.ticket-venta__anuncio,.ticket-venta__acciones { display:none!important; }
+  .ticket-venta__escena { display:block!important; padding:0!important; background:#fff!important; overflow:visible!important; }
+  .ticket-venta__papel-contenedor { width:78mm!important; margin:0 auto!important; display:block!important;
+    overflow:visible!important; grid-template-rows:1fr!important; }
+  .ticket-venta__papel-caja { overflow:visible!important; }
+  .ticket-venta__papel { width:78mm!important; padding:5mm!important; box-shadow:none!important; clip-path:none!important;
+    background:#fff!important; color:#111!important; font-size:10pt!important; break-inside:avoid; }
+  .ticket-venta__codigo { print-color-adjust:exact; -webkit-print-color-adjust:exact; }
+}
