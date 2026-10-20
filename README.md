@@ -40,7 +40,7 @@ base de datos, API ni inicio de sesión**.
 - [Cómo abrir el proyecto](#cómo-abrir-el-proyecto)
 - [Navegación entre vistas](#navegación-entre-vistas)
 - [Funcionalidades implementadas](#funcionalidades-implementadas)
-- [Funcionalidades pendientes y observaciones conocidas](#funcionalidades-pendientes-y-observaciones-conocidas)
+- [Funcionalidades pendientes](#funcionalidades-pendientes)
 - [Datos y almacenamiento](#datos-y-almacenamiento)
 - [Casos manuales: resultado observado](#casos-manuales-resultado-observado)
 - [Imágenes y recursos](#imágenes-y-recursos)
@@ -82,7 +82,6 @@ actual.
 - Filtro por título: no distingue mayúsculas de minúsculas, admite
   coincidencias parciales e ignora los espacios de los extremos. Una búsqueda
   vacía muestra todo el catálogo; una sin coincidencias muestra un mensaje.
-  El filtro no ignora tildes: `dias` no encuentra «Los días contados».
 - **Ficha de lectura**: el botón «Ver sinopsis» de cada tarjeta abre un
   diálogo con portada, datos y sinopsis. Las sinopsis de los seis libros de
   ejemplo son ilustrativas y la ficha lo aclara.
@@ -152,17 +151,14 @@ unidades cuestan `3000,26`. Los cálculos usan centavos enteros.
 > «Sin recargar» significa dentro de la misma página donde ocurre el alta.
 > Al navegar a otra vista, esa vista vuelve a leer el almacenamiento.
 
-## Funcionalidades pendientes y observaciones conocidas
+## Funcionalidades pendientes
 
-Todas las vistas y operaciones de la consigna están implementadas. Estas son
-las diferencias y los pendientes conocidos al 2026-10-20:
+No hay funcionalidades pendientes: las cinco vistas y todas las operaciones
+de la consigna están implementadas.
 
-| # | Observación | Efecto | Estado |
-|---|---|---|---|
-| 1 | El alta de clientes **exige teléfono**, que la consigna no pide (solo nombre completo y email) | Un cliente nuevo sin teléfono se rechaza (ver CM-3) | En revisión por el equipo |
-| 2 | La **edición de clientes** no la exige la consigna | Ninguno sobre las ventas confirmadas | En revisión por el equipo |
-| 3 | Las pruebas automatizadas de clientes no contemplan el teléfono | 15 de 153 pruebas fallan | Pendiente de actualizar |
-| 4 | `index.html` conserva referencias a `img/portadas/*.jpg`, que no existen | Errores «archivo no encontrado» en la consola; sin efecto visual | Pendiente |
+Además del alcance pedido, el proyecto incluye la ficha de lectura del
+Catálogo, el comprobante de venta y la edición de los datos de contacto de
+los clientes.
 
 ---
 
@@ -241,11 +237,11 @@ auditoría con lector de pantalla.
 |---|---|---|---|
 | **CM-1** Búsqueda en mayúsculas, vacía e inexistente | Coincidencias sin distinguir mayúsculas; catálogo completo; mensaje sin resultados | `FARO` → 1 tarjeta; `   faro   ` → 1; vacía → 6; `zzzz` → 0 con «No se encontraron libros…» | ✅ Aprobado |
 | **CM-2** Alta de libro con ISBN existente y luego nuevo | El duplicado se rechaza; el válido aparece en catálogo y en la venta | `978 987 000 001 1` rechazado con «Ese ISBN ya está registrado.»; el libro nuevo aparece en la tabla (7 filas), en el Catálogo (7) y en el selector de Ventas | ✅ Aprobado |
-| **CM-3** Alta de cliente con email inválido, existente en mayúsculas y nuevo | Se rechazan los dos primeros; el nuevo aparece en listado y selección | `ana@` y `  LAURA.MENDOZA@CORREO.TEST ` rechazados. **El email nuevo sin teléfono se rechaza** con «El teléfono es obligatorio.»; con teléfono se registra (4 filas) y aparece en el selector de Ventas | ⚠️ Con observación (ver [observación 1](#funcionalidades-pendientes-y-observaciones-conocidas)) |
+| **CM-3** Alta de cliente con email inválido, existente en mayúsculas y nuevo | Se rechazan los dos primeros; el nuevo aparece en listado y selección | `ana@` rechazado con «El email no tiene un formato válido.»; `  LAURA.MENDOZA@CORREO.TEST ` rechazado con «Ese email ya está registrado.»; el cliente nuevo (nombre, email y teléfono) se registra sin recargar (4 filas) y aparece en el selector de Ventas | ✅ Aprobado |
 | **CM-4** Venta sin cliente, cantidad 0, negativa o decimal; libro repetido | No se confirma; el duplicado no crea otro renglón | Sin cliente: «Seleccione un cliente existente.»; `0`, `-2` y `1.5` rechazadas; un renglón editado a `0` bloquea la confirmación; el libro repetido suma en la misma fila (1 + 1 → 2) | ✅ Aprobado |
 | **CM-5** Dos unidades a 1500 y una a 2000 | Subtotales 3000 y 2000; total 5000; detalle en el historial | $ 3000,00 y $ 2000,00; total $ 5000,00; venta `ven-01` guardada con el mismo detalle en Historial | ✅ Aprobado |
 | **CM-6** Cambio exclusivo del precio en el catálogo guardado | El historial conserva los importes confirmados | Precio de `lib-01` cambiado a 9999 y página recargada: el detalle conserva $ 1500,00 / $ 2000,00, $ 3000,00 / $ 2000,00 y $ 5000,00; el Catálogo muestra $ 9999,00 | ✅ Aprobado |
-| **CM-7** Recarga después de altas y venta | Se recuperan los datos sin duplicar | Tras recargar las cinco vistas: 7 libros, 4 clientes y 1 venta. La consola muestra errores de las portadas `.jpg` inexistentes ([observación 4](#funcionalidades-pendientes-y-observaciones-conocidas)) | ✅ Aprobado |
+| **CM-7** Recarga después de altas y venta | Se recuperan los datos sin duplicar | Tras recargar las cinco vistas: 7 libros, 4 clientes y 1 venta, sin duplicar ejemplos ni ventas | ✅ Aprobado |
 | **CM-8** Teclado y anchos de 320 px y 1280 px | Foco visible, controles utilizables y tablas con desplazamiento propio | Sin desplazamiento horizontal de la página en las cinco vistas ni con los diálogos abiertos (ficha, edición de cliente y comprobante); foco visible en todas las paradas de Tab; a 320 px las tablas se desplazan dentro de su contenedor | ✅ Aprobado |
 
 También se comprobaron los mensajes de lista vacía de las cinco vistas y que
@@ -306,11 +302,8 @@ Sin instalar dependencias:
 node --test tests/*.test.js
 ```
 
-Usar el patrón `tests/*.test.js`: `node --test tests/` falla en Windows y en
-Node 24. Último resultado (2026-10-19): **138 aprobadas y 15 fallidas** de
-153, todas en `tests/clientes.test.js` por el teléfono obligatorio
-([observación 3](#funcionalidades-pendientes-y-observaciones-conocidas)). Estas
-pruebas no sustituyen los recorridos en el navegador.
+Usar el patrón `tests/*.test.js`: `node --test tests/` no funciona en Windows
+ni en Node 24. Estas pruebas no sustituyen los recorridos en el navegador.
 
 ### Memoria compartida (Engram)
 

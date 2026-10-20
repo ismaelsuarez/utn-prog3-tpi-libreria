@@ -80,6 +80,14 @@
       "sessions": 0,
       "memories": 0,
       "prompts": 1
+    },
+    {
+      "id": "af928f7a",
+      "created_by": "devops",
+      "created_at": "2026-10-20T11:47:31.825676004Z",
+      "sessions": 0,
+      "memories": 0,
+      "prompts": 2
     }
   ]
 }
